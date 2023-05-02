@@ -1,0 +1,2 @@
+# MosaicCore
+Core for MosaicMC
