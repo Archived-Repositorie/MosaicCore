@@ -37,7 +37,12 @@ object EventHandler {
     fun <T : Event> callEvent(event: T) {
         val handler = event.getHandler()
         for(key in handler) {
-            if (event is CancellableEvent && event.isCancelled() && !key.data.ignoreCancelled) break
+            if (
+                event is CancellableEvent &&
+                event.isCancelled() &&
+                !key.data.ignoreCancelled
+            ) break
+
             key.subscriber.call(key.classObject, event)
         }
     }
@@ -85,7 +90,7 @@ object EventHandler {
         if (
             params.size == 2 &&
             params[0].type != objectType
-        ) {
+) {
             throw IllegalArgumentException("Function ${callable.name} cannot be static")
         }
     }

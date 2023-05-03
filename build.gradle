@@ -58,20 +58,27 @@ jar {
 
 compileKotlin.kotlinOptions.jvmTarget = "17"
 
-//publishing {
-//	repositories {
-//		maven {
-//			name = "GitHubPackages"
-//			url = uri("https://maven.pkg.github.com/mosaicmc/mosaiccore")
-//			credentials {
-//				username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
-//				password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
-//			}
-//		}
-//	}
-//	publications {
-//		gpr(MavenPublication) {
-//			from(components.java)
-//		}
-//	}
-//}
+publishing {
+	publications {
+		mavenJava(MavenPublication) {
+			// add all the jars that should be included when publishing to maven
+			artifact(jar) {
+				builtBy remapJar
+			}
+			artifact(sourcesJar) {
+				builtBy remapSourcesJar
+			}
+		}
+	}
+
+	repositories {
+		maven {
+			name = "GitHubPackages"
+			url = "https://maven.pkg.github.com/${project.gitRepository}"
+			credentials {
+				username = System.getenv("GITHUB_ACTOR")
+				password = System.getenv("GITHUB_TOKEN")
+			}
+		}
+	}
+}
