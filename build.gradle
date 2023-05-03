@@ -2,6 +2,7 @@ plugins {
 	id 'fabric-loom' version '1.2-SNAPSHOT'
 	id 'maven-publish'
 	id 'org.jetbrains.kotlin.jvm'
+	id 'maven-publish'
 }
 
 loom {
@@ -57,3 +58,21 @@ jar {
 }
 
 compileKotlin.kotlinOptions.jvmTarget = "17"
+
+publishing {
+	repositories {
+		maven {
+			name = "GitHubPackages"
+			url = uri("https://maven.pkg.github.com/MosaicMC/MosaicCore")
+			credentials {
+				username = project.findProperty("gpr.user") ?: System.getenv("USERNAME")
+				password = project.findProperty("gpr.key") ?: System.getenv("TOKEN")
+			}
+		}
+	}
+	publications {
+		gpr(MavenPublication) {
+			from(components.java)
+		}
+	}
+}
