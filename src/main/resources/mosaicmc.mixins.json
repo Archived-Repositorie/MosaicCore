@@ -1,0 +1,11 @@
+{
+  "required": true,
+  "minVersion": "0.8",
+  "package": "io.github.mosaicmc.mosaiccore.mixins",
+  "compatibilityLevel": "JAVA_17",
+  "mixins": [
+  ],
+  "injectors": {
+    "defaultRequire": 1
+  }
+}

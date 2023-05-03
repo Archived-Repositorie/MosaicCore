@@ -1,0 +1,48 @@
+{
+  "schemaVersion": 1,
+  "id": "mosaiccore",
+  "version": "${version}",
+
+  "name": "MosaicCore",
+  "description": "Core for MosaicMC",
+  "authors": [
+    "JustFoxx"
+  ],
+  "contact": {
+    "homepage": "https://github.com/MosaicMC/MosaicCore",
+    "sources": "https://github.com/MosaicMC/MosaicCore"
+  },
+
+  "license": "LGPL-3.0",
+  "environment": "*",
+  "entrypoints": {
+    "preLaunch": [
+      {
+        "adapter": "kotlin",
+        "value": "io.github.mosaicmc.mosaiccore.MainKt::preInit"
+      }
+    ],
+    "main": [
+      {
+        "adapter": "kotlin",
+        "value": "io.github.mosaicmc.mosaiccore.MainKt::init"
+      }
+    ],
+    "test": [
+      {
+        "adapter": "kotlin",
+        "value": "io.github.mosaicmc.mosaiccore.MainKt::test"
+      }
+    ]
+  },
+  "mixins": [
+    "mosaicmc.mixins.json"
+  ],
+
+  "depends": {
+    "fabricloader": ">=0.14.19",
+    "minecraft": ">=1.19",
+    "java": ">=17",
+    "fabric-language-kotlin": "*"
+  }
+}
