@@ -7,6 +7,10 @@ import kotlin.reflect.full.createType
 import kotlin.reflect.full.functions
 import kotlin.reflect.jvm.isAccessible
 
+/**
+ * Event handler is a class that handles all events.
+ * Remember, when registering listeners, subscribers must not be static
+ */
 object EventHandler {
     fun registerListener(listener: Listener) {
         val functions = getFunctions(listener)
@@ -31,11 +35,14 @@ object EventHandler {
     }
 
     fun <T : Event> callEvent(event: T) {
-        event.getHandler().forEach {
-            it.subscriber.call(it.classObject, event)
+        val handler = event.getHandler()
+        for(key in handler) {
+            if (event is CancellableEvent && event.isCancelled() && !key.data.ignoreCancelled) break
+            key.subscriber.call(key.classObject, event)
         }
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun getFunctions(listener: Listener): List<KFunction1<Event, Unit>> {
         return listener::class.functions.asSequence().filter {
             it.annotations.any { annotation -> annotation is Subscriber }
@@ -60,6 +67,7 @@ object EventHandler {
         handler.add(callable, subscriber, classObject)
     }
 
+    @Suppress("UNCHECKED_CAST")
     private fun getHandler(callable: KFunction1<Event, Unit>): Handler<Event> {
         val clazz = callable.parameters[1].type.classifier as KClass<Event>
         val classObjectInstance = clazz.companionObjectInstance!!

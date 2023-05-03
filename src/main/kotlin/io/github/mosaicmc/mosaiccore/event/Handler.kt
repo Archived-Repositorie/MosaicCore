@@ -24,6 +24,10 @@ class Handler<E : Event> : Iterable<Handler.Key<E>> {
         remove(Key(subscriber, data, classObject))
     }
 
+    override fun iterator(): Iterator<Key<E>> {
+        return values.iterator()
+    }
+
     private fun remove(key: Key<E>) {
         values.remove(key)
     }
@@ -31,10 +35,6 @@ class Handler<E : Event> : Iterable<Handler.Key<E>> {
     private fun add(valueKey: Key<E>) {
         val index = getSortedPlace(valueKey)
         values.add(index, valueKey)
-    }
-
-    override fun iterator(): Iterator<Key<E>> {
-        return values.iterator()
     }
 
     private fun getSortedPlace(key: Key<E>): Int {

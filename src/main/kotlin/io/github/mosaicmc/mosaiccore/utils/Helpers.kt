@@ -11,7 +11,7 @@ import java.io.FileReader
 import java.nio.file.Files
 import java.nio.file.Path
 
-val GSON: Gson = GsonBuilder().setPrettyPrinting().create()
+internal val GSON: Gson = GsonBuilder().setPrettyPrinting().create()
 
 /**
  * Reads a JSON object from a file.
@@ -46,7 +46,7 @@ fun Path.writeByJsonObject(data: JsonObject): JsonObject {
  * @throws Exception If the file is not found or if the data cannot be written to the file.
  */
 @Throws(Exception::class)
-fun <Object> Path.writeObject(data: Object): JsonObject {
+fun <Object> Path.convertAndWriteObject(data: Object): JsonObject {
     val jsonObject = GSON.toJsonTree(data).asJsonObject
     return this.writeByJsonObject(jsonObject)
 }
@@ -59,11 +59,25 @@ fun <Object> Path.writeObject(data: Object): JsonObject {
  * @throws Exception If the file is not found or if the data cannot be written to the file.
  */
 @Throws(Exception::class)
-fun <Object> Path.getDefaultJsonObject(defaultObject: Object?): JsonObject {
+fun <Object> Path.getDefaultOrWriteJsonObject(defaultObject: Object?): JsonObject {
     return if (defaultObject != null)
-        this.writeObject(defaultObject)
+        this.convertAndWriteObject(defaultObject)
     else
         JsonObject()
+}
+
+/**
+ * Formater formats a string with a hashmap
+ * @param format hashmap of keys in string to replace
+ * @return formatted string
+ */
+@Suppress("unused")
+fun String.formater(format: HashMap<String,Any>): String {
+    var result = this
+    for (pair in format) {
+        result = result.replace(pair.key, pair.value.toString())
+    }
+    return result
 }
 
 private fun File.jsonReader(): JsonObject {
@@ -74,13 +88,4 @@ private fun File.jsonReader(): JsonObject {
 private fun File.jsonWriter(data: JsonObject): JsonObject {
     Files.writeString(this.toPath(), GSON.toJson(data))
     return this.jsonReader()
-}
-
-@Suppress("unused")
-fun String.formater(format: HashMap<String,Any>): String {
-    var result = this
-    for (pair in format) {
-        result = result.replace(pair.key, pair.value.toString())
-    }
-    return result
 }
