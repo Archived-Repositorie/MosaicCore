@@ -44,7 +44,7 @@ object PluginObject : PluginInitializer {
 Registering listener can be done using `EventHandler.registerListener(EventListener)`. Listener needs to implement `Listener` interface.</br>
 Example usage:
 ```kt
-fun init() {
+fun test() {
   EventHandler.registerListener(EventListener)
 }
 
@@ -69,7 +69,7 @@ which will force user to OptIn and also will warn them from usage of the event. 
 </br>
 Example of simple event:
 ```kt
-fun init() {
+fun test() {
   EventHandler.callEvent(TestEvent)
 }
 
@@ -88,10 +88,10 @@ class TestEvent : Event() {
 ```
 Example of laggy and cancellable event and usage:
 ```kt
-fun init() {
+fun test() {
   @OptIn(Laggy::class) EventHandler.callEvent(TestEvent())
 }
-fun afterInit() {
+fun beforeTest() {
   EventHandler.registerListener(EventListener)
 }
 
