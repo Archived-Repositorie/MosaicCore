@@ -28,10 +28,10 @@
         "value": "io.github.mosaicmc.mosaiccore.MainKt::init"
       }
     ],
-    "test": [
+    "plugin": [
       {
         "adapter": "kotlin",
-        "value": "io.github.mosaicmc.mosaiccore.MainKt::test"
+        "value": "com.test.Test"
       }
     ]
   },

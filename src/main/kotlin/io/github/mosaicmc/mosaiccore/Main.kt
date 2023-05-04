@@ -1,34 +1,26 @@
 
 package io.github.mosaicmc.mosaiccore
 
-import io.github.mosaicmc.mosaiccore.event.*
-import io.github.mosaicmc.mosaiccore.utils.Mod
+import io.github.mosaicmc.mosaiccore.plugin.PluginInitializer
 import net.fabricmc.loader.api.FabricLoader
-import net.minecraft.test.TestListener
+import org.slf4j.LoggerFactory
 
 
-internal val mod = Mod("mosaicmc")
+internal val logger = LoggerFactory.getLogger("mosaicmc")
+internal val plugins = FabricLoader.getInstance().getEntrypointContainers("plugin", PluginInitializer::class.java)
 
 @Suppress("unused")
 fun preInit() {
-    mod.logger.info("Welcome to mosaicmc!")
-
+    logger.info("Welcome to mosaicmc!")
     if(System.getenv("TEST") == "true") {
-        mod.logger.info("Test mode enabled")
-        FabricLoader.getInstance().getEntrypoints("test", Runnable::class.java).forEach(Runnable::run)
+        logger.info("Test mode enabled")
     }
 }
 
-@Suppress("unused")
-fun test() {
-
-}
 
 @Suppress("unused")
 fun init() {
 }
-
-
 
 
 
