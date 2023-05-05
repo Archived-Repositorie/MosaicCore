@@ -21,18 +21,6 @@
         "adapter": "kotlin",
         "value": "io.github.mosaicmc.mosaiccore.MainKt::preInit"
       }
-    ],
-    "main": [
-      {
-        "adapter": "kotlin",
-        "value": "io.github.mosaicmc.mosaiccore.MainKt::init"
-      }
-    ],
-    "plugin": [
-      {
-        "adapter": "kotlin",
-        "value": "com.test.Test"
-      }
     ]
   },
   "mixins": [
