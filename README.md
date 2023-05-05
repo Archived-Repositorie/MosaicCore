@@ -1,7 +1,6 @@
 # MosaicCore Documentation
 ## What is MosaicCore?
-MosaicCore is pure library created as core for our MosaicMC project. The core doesn't modify nor access minecraft code and it is made to be implemented by MosaicMC. 
-It has own event system which can be implemented and helper classes.
+MosaicCore is loader/library made as core for MosaicMC to have base to implement features. It can be seen as plugin loader or very extended library for fabric but either way it is made to support server side plugins on fabric loader. It doesn't modify the forge loader at all as the fabric loader is correctly suited for it will break mods (can change in feature). The core itself only access MinecraftServer class to make plugins loading on start of server. It is made purely to work on kotlin, any type with java compatibility won't be seen in official releases.
 ## Usage
 1. Add modrinth repository to build.gradle
 ```groovy
@@ -19,12 +18,33 @@ dependencies {
     modImplementation "maven.modrinth:mosaiccore:{version}"
 }
 ```
+## Making plugin
+1. First you need to add entrypoint called `plugin` to `fabric.mod.json` under `Entrypoints` key, like this. Replace `plugin.entrypoint.PluginObject` with value that represents your function/class/object. If wanted to use different methods of doing it, look at readme of [fabric-language-kotlin](https://github.com/FabricMC/fabric-language-kotlin#entrypoint-samples).
+```json
+  "entrypoints": {
+    "plugin": [
+      {
+        "adapter": "kotlin",
+        "value": "plugin.entrypoint.PluginObject"
+      }
+    ]
+  },
+```
+2. Your plugin entrypoint (if it is class/object) requires to implement interface called `PluginInitializer` which will have function called `onLoad`, it will contain in the argument the `PluginContainer` which contains informations about plugin and also the function will be executed before the server loader. If wanted to use different methods of doing it, look at readme of [fabric-language-kotlin](https://github.com/FabricMC/fabric-language-kotlin#entrypoint-samples).
+```kt
+object PluginObject : PluginInitializer {
+    override fun onLoad(plugin: PluginContainer) {
+        plugin.logger.info("Hello there!")
+    }
+}
+```
+
 ## Event system
 ### Registering listener
 Registering listener can be done using `EventHandler.registerListener(EventListener)`. Listener needs to implement `Listener` interface.</br>
 Example usage:
 ```kt
-fun init() {
+fun test() {
   EventHandler.registerListener(EventListener)
 }
 
@@ -34,7 +54,7 @@ object EventListener : Listener {
 }
 ```
 ### Subscriber
-Subscriber is a function inside listener. It subscribes on event which is in the argument of the function. Fanction cannot have annotation `@JvmStatic` otherwise it errors.
+Subscriber is a function inside listener. It subscribes on event which is in the argument of the function. Function cannot have annotation `@JvmStatic` otherwise it errors.
 Subscriber can also handle priority and can ignore cancellation.</br>
 Example usage: 
 ```kt
@@ -49,7 +69,7 @@ which will force user to OptIn and also will warn them from usage of the event. 
 </br>
 Example of simple event:
 ```kt
-fun init() {
+fun test() {
   EventHandler.callEvent(TestEvent)
 }
 
@@ -68,10 +88,10 @@ class TestEvent : Event() {
 ```
 Example of laggy and cancellable event and usage:
 ```kt
-fun init() {
+fun test() {
   @OptIn(Laggy::class) EventHandler.callEvent(TestEvent())
 }
-fun afterInit() {
+fun beforeTest() {
   EventHandler.registerListener(EventListener)
 }
 
