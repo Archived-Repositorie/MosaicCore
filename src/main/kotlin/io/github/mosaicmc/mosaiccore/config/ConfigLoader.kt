@@ -12,6 +12,10 @@ import java.util.*
  * Config loader is class with helper functions for loading and creating config files
  * Uses json
  */
+class ConfigLoaderA<T : DataConverter<*>> {
+
+
+}
 object ConfigLoader {
     /**
      * Load or create config file
