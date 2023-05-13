@@ -2,7 +2,14 @@ package io.github.mosaicmc.mosaiccore.event
 
 /**
  * Priority of an event subscriber.
- * If higher priority subscriber are registered, they will be called first.
+ * If there are multiple subscribers for an event, subscribers with higher priority are called before those with lower priority.
+ *
+ * The `Priority` enum provides the following levels of priority, in decreasing order:
+ * - `HIGHEST`
+ * - `HIGH`
+ * - `NORMAL` (default)
+ * - `LOW`
+ * - `LOWEST`
  */
 @Suppress("unused")
 enum class Priority {

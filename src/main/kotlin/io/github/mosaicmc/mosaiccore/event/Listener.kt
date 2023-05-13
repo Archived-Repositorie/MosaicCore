@@ -1,8 +1,8 @@
 package io.github.mosaicmc.mosaiccore.event
 
 /**
- * Listener used for listener objects/classes.
- * Listener must be either object or class and subscriber must be not static.
- * @constructor Create empty Listener
+ * Listener interface used for objects or classes that contain subscriber functions.
+ *
+ * The `Listener` must be either an object or a class and the subscriber function must not be static.
  */
 interface Listener

@@ -2,96 +2,149 @@ package io.github.mosaicmc.mosaiccore.event
 
 import kotlin.reflect.KClass
 import kotlin.reflect.KFunction1
-import kotlin.reflect.full.companionObjectInstance
-import kotlin.reflect.full.createType
 import kotlin.reflect.full.functions
-import kotlin.reflect.jvm.isAccessible
 
 /**
  * Event handler is a class that handles all events.
- * Remember, when registering listeners, subscribers must not be static
  */
 object EventHandler {
+
+    private val events: HashMap<KClass<out Event>, Handler<out Event>> = HashMap()
+
+    fun <E : Event> registerEvent(event: KClass<E>) {
+        if (events.containsKey(event)) {
+            throw IllegalArgumentException("Event ${event.simpleName} is already registered!")
+        }
+        val handler: Handler<E> = Handler()
+        events[event] = handler
+    }
+
+    fun <E : Event> unregisterEvent(event: KClass<E>) {
+        if (!events.containsKey(event)) {
+            throw IllegalArgumentException("Event ${event.simpleName} is not registered!")
+        }
+        events.remove(event)
+    }
+
+    fun <E : Event> registerSubscriber(
+        event: KClass<E>,
+        function: KFunction1<E, Unit>,
+        subscriber: Subscriber
+    ) {
+        getHandler(event).add(function, subscriber, null)
+    }
+
+    private fun <E : Event> registerSubscriber(
+        event: KClass<E>,
+        function: KFunction1<E, Unit>,
+        subscriber: Subscriber,
+        listener: Listener
+    ) {
+        getHandler(event).add(function, subscriber, listener)
+    }
+
+    fun <E : Event> unregisterSubscriber(
+        event: KClass<E>,
+        function: KFunction1<E, Unit>,
+        subscriber: Subscriber
+    ) {
+        getHandler(event).remove(function, subscriber, null)
+    }
+
+    private fun <E : Event> unregisterSubscriber(
+        event: KClass<E>,
+        function: KFunction1<E, Unit>,
+        subscriber: Subscriber,
+        listener: Listener
+    ) {
+        getHandler(event).remove(function, subscriber, listener)
+    }
+
+
     fun registerListener(listener: Listener) {
-        val functions = getFunctions(listener)
+        val functions = getSubscribers(listener)
 
         for (function in functions) {
-            val subscriber = getFunctionSubscriber(function)
+            val event = getEventSubscriber(function)
+            val subscriber = getSubscriberData(function)
 
-            testFunction(function, listener)
-            registerFunction(function, subscriber, listener)
+            testFunction(function)
+            registerSubscriber(event, function, subscriber, listener)
         }
     }
 
     fun unregisterListener(listener: Listener) {
-        val functions = getFunctions(listener)
+        val functions = getSubscribers(listener)
 
         for (function in functions) {
-            val subscriber = getFunctionSubscriber(function)
+            val event = getEventSubscriber(function)
+            val subscriber = getSubscriberData(function)
 
-            testFunction(function, listener)
-            unregisterFunction(function, subscriber, listener)
+            testFunction(function)
+            unregisterSubscriber(event, function, subscriber, listener)
         }
     }
 
-    fun <T : Event> callEvent(event: T) {
-        val handler = event.getHandler()
+    fun <E : Event> callEvent(event: E) {
+        checkForEvent(event::class)
+        val handler = getHandler(event::class)
         for(key in handler) {
             if (
+                key.data.ignoreCancelled ||
                 event is CancellableEvent &&
-                event.isCancelled() &&
-                !key.data.ignoreCancelled
+                event.cancelled
             ) break
 
-            key.subscriber.call(key.classObject, event)
+            callFunction(key, event)
         }
     }
 
-    @Suppress("UNCHECKED_CAST")
-    private fun getFunctions(listener: Listener): List<KFunction1<Event, Unit>> {
+    private fun <E : Event> callFunction(key: Handler.Key<out E>, event: E) {
+        if (key.listener == null) {
+            key.subscriber.call(event)
+        } else {
+            key.subscriber.call(key.listener, event)
+        }
+    }
+
+    private fun getSubscribers(listener: Listener): List<KFunction1<Event, Unit>> {
         return listener::class.functions.asSequence().filter {
             it.annotations.any { annotation -> annotation is Subscriber }
-        }.map {
+        }.map @Suppress("UNCHECKED_CAST") {
             it as KFunction1<Event, Unit>
         }.toList()
     }
 
-    private fun getFunctionSubscriber(callable: KFunction1<Event, Unit>): Subscriber {
+    private fun getSubscriberData(callable: KFunction1<Event, Unit>): Subscriber {
         return callable.annotations.find { annotation -> annotation is Subscriber } as Subscriber
     }
 
-    private fun unregisterFunction(callable: KFunction1<Event, Unit>, subscriber: Subscriber, listener: Listener) {
-        val handler = getHandler(callable)
-
-        handler.remove(callable, subscriber, listener)
-    }
-
-    private fun registerFunction(callable: KFunction1<Event, Unit>, subscriber: Subscriber, classObject: Listener) {
-        val handler = getHandler(callable)
-
-        handler.add(callable, subscriber, classObject)
+    @Suppress("UNCHECKED_CAST")
+    private fun <E : Event> getEventSubscriber(callable: KFunction1<E, Unit>): KClass<E> {
+        val eventClass = callable.parameters[1].type.classifier as KClass<E>
+        checkForEvent(eventClass)
+        return eventClass
     }
 
     @Suppress("UNCHECKED_CAST")
-    private fun getHandler(callable: KFunction1<Event, Unit>): Handler<Event> {
-        val clazz = callable.parameters[1].type.classifier as KClass<Event>
-        val classObjectInstance = clazz.companionObjectInstance!!
-        val function = classObjectInstance::class.functions.asSequence().filter { it.name == "getHandler" }.first()
-
-        function.isAccessible = true
-
-        return function.call(classObjectInstance) as Handler<Event>
+    private fun <E : Event> getHandler(event: KClass<E>): Handler<out E> {
+        checkForEvent(event)
+        return events[event]!! as Handler<out E>
     }
 
-    private fun testFunction(callable: KFunction1<Event, Unit>, classObject: Listener) {
+    private fun testFunction(callable: KFunction1<Event, Unit>) {
         val params = callable.parameters
-        val objectType = classObject::class.createType()
 
-        if (
-            params.size == 2 &&
-            params[0].type != objectType
-) {
-            throw IllegalArgumentException("Function ${callable.name} cannot be static")
+        println(params)
+
+        if (params.size != 2) {
+            throw IllegalArgumentException("Function ${callable.name} must have 1 parameter!")
+        }
+    }
+
+    private fun checkForEvent(event: KClass<out Event>) {
+        if (!events.containsKey(event)) {
+            throw IllegalArgumentException("Event ${event.simpleName} is not registered!")
         }
     }
 }
