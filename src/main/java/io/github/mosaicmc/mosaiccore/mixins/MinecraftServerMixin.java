@@ -11,7 +11,14 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo;
 @Mixin(MinecraftServer.class)
 public class MinecraftServerMixin {
     @Inject(at = @At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;setupServer()Z"), method = "runServer")
-    private void beforeSetupServer(CallbackInfo info) {
+    private void pluginLoader(CallbackInfo info) {
+        final var beforePlugins = MainKt.getBeforePlugins();
+        for(final var plugin : beforePlugins) {
+            final var entryPoint = plugin.getEntrypoint();
+
+            entryPoint.beforeLoad();
+        }
+
         final var plugins = MainKt.getPlugins();
         for(final var plugin : plugins) {
             final var entryPoint = plugin.getEntrypoint();
