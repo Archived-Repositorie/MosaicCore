@@ -15,7 +15,6 @@ fun preInit() {
     if(System.getenv("TEST") == "true") {
         logger.info("Test mode enabled")
     }
-
 }
 
 
