@@ -23,7 +23,7 @@ class ConfigLoader<T>(private val dataConverter: DataConverter<T>) {
      * @return a pair containing the loaded configuration object (or the given [configObject] if it was provided)
      * and the configuration data
      */
-    fun <Object> loadOrCreateConfig(plugin: PluginContainer, configObject: Object? = null): Pair<Object?, T> {
+    fun <Object : ConfigObject> loadOrCreateConfig(plugin: PluginContainer, configObject: Object? = null): Pair<Object?, T> {
         return loadOrCreateConfig(plugin.name, configObject)
     }
 
@@ -36,11 +36,11 @@ class ConfigLoader<T>(private val dataConverter: DataConverter<T>) {
      * @return a pair containing the loaded configuration object (or the given [configObject] if it was provided)
      * and the configuration data
      */
-    fun <Object> loadOrCreateConfig(name: String, configObject: Object? = null): Pair<Object?, T> {
+    fun <Object : ConfigObject> loadOrCreateConfig(name: String, configObject: Object? = null): Pair<Object?, T> {
         return loadOrCreateConfig(Path.of("$name.${dataConverter.extension}"), configObject)
     }
 
-    private fun <Object> loadOrCreateConfig(path: Path, configObject: Object? = null): Pair<Object?, T> {
+    private fun <Object : ConfigObject> loadOrCreateConfig(path: Path, configObject: Object? = null): Pair<Object?, T> {
         val configPath = FabricLoader.getInstance().configDir.resolve(path)
 
         val configData = if (Files.notExists(configPath)) {
@@ -56,7 +56,7 @@ class ConfigLoader<T>(private val dataConverter: DataConverter<T>) {
         }
     }
 
-    private fun getDefaultOrWriteData(configPath: Path, configObject: Any? = null): T {
+    private fun <Object : ConfigObject> getDefaultOrWriteData(configPath: Path, configObject: Object? = null): T {
         Files.createFile(configPath)
         val dataToUse: T = if (configObject != null) {
             dataConverter.convertObject(configObject)

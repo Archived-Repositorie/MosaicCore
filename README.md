@@ -1,6 +1,6 @@
 # MosaicCore Documentation
 ## What is MosaicCore?
-MosaicCore is loader/library made as core for MosaicMC to have base to implement features. It can be seen as plugin loader or very extended library for fabric but either way it is made to support server side plugins on fabric loader. It doesn't modify the forge loader at all as the fabric loader is correctly suited for it will break mods (can change in feature). The core itself only access MinecraftServer class to make plugins loading on start of server. It is made purely to work on kotlin, any type with java compatibility won't be seen in official releases.
+MosaicCore is loader/library made as core for MosaicMC to have base to implement features. It can be seen as plugin loader or very extended library for fabric.
 ## Usage
 1. Add modrinth repository to build.gradle
 ```groovy
@@ -40,59 +40,59 @@ object PluginObject : PluginInitializer {
 ```
 
 ## Event system
-### Registering listener
-Registering listener can be done using `EventHandler.registerListener(EventListener)`. Listener needs to implement `Listener` interface.</br>
+### Registering subscriber
+Registering subscriber can be done through listener using `EventHandler.registerListener(EventListener)`. Listener needs to implement `Listener` interface.</br>
+Or registering the subscriber itself using `EventHandler.registerSubscriber(::test)`.</br>
 Example usage:
 ```kt
 fun test() {
-  EventHandler.registerListener(EventListener)
+    EventHandler.registerListener(EventListener)
+    EventHandler.registerSubscriber(::test)
 }
 
-object EventListener : Listener {
-  @Subscriber
-  fun test(event: TestEvent)
+object EventListener : Listener { 
+    @Subscriber 
+    fun test(event: TestEvent)
 }
+
+@Subscriber
+fun test(event: TestEvent)
 ```
 ### Subscriber
-Subscriber is a function inside listener. It subscribes on event which is in the argument of the function. Function cannot have annotation `@JvmStatic` otherwise it errors.
+Subscriber is a function that subscribe on specific event, it has many way of registering. Either by using listener or using the function itself.
 Subscriber can also handle priority and can ignore cancellation.</br>
 Example usage: 
 ```kt
-object EventListener : Listener {
-  @Subscriber(priority = Priority.HIGHEST, ignoreCancelled = true)
-  fun test(event: TestEvent)
+object EventListener : Listener { 
+    @Subscriber(priority = Priority.HIGHEST, ignoreCancelled = true) 
+    fun test(event: TestEvent)
 }
 ```
+```kt
+@Subscriber(priority = Priority.HIGHEST, ignoreCancelled = true)
+fun test(event: TestEvent)
+```
 ### Custom event
-Custom event is class which subscriber can subscribe on through listener. Events can be cancellable by implementing `Cancellable` interface and also can be laggy by annotating `@Laggy`
+Custom event is class which subscriber can subscribe on. Event also needs to be registered using `EventHandler.registerEvent(TestEvent::class)`. Events can be cancellable by implementing `Cancellable` interface and also can be laggy by annotating `@Laggy`
 which will force user to OptIn and also will warn them from usage of the event. They can be called by using `EventHandler.callEvent(TestEvent)`
 </br>
+It is advice to register events on before plugin load, so they can be registered before any subscriber is registered.
 Example of simple event:
 ```kt
 fun test() {
-  EventHandler.callEvent(TestEvent)
+    EventHandler.registerEvent(TestEvent::class)
+    EventHandler.callEvent(TestEvent())
 }
 
-class TestEvent : Event() {
-    override fun getHandler(): Handler<*> {
-        return handler
-    }
-    
-    companion object {  // !! THIS PART IS REQUIRED TO WORK OTHERWISE IT WILL FAIL !!
-        private val handler = Handler<TestEvent>()
-        fun getHandler(): Handler<TestEvent> {
-            return handler
-        }
-    }
-}
+class TestEvent : Event
 ```
 Example of laggy and cancellable event and usage:
 ```kt
-fun test() {
-  @OptIn(Laggy::class) EventHandler.callEvent(TestEvent())
+fun test() { 
+    @OptIn(Laggy::class) EventHandler.callEvent(TestEvent())
 }
-fun beforeTest() {
-  EventHandler.registerListener(EventListener)
+fun beforeTest() { 
+    EventHandler.registerListener(EventListener)
 }
 
 data EventListener {
@@ -101,18 +101,58 @@ data EventListener {
 }
 
 @Laggy
-class TestEvent : Event(), CancellableEvent {
+class TestEvent : Event, CancellableEvent {
     override var cancelled: Boolean = false
+}
+```
+## Config system
+Mod contains a very flexible config system which can be used by any plugin. It gives ability for developers to also add different types of data for config.
+### Using config (JSON)
+Example of making config that uses default json data type.
 
-    override fun getHandler(): Handler<*> {
-        return handler
+```kt
+internal val config = ConfigLoader.JSON_CONFIG
+
+fun pluginInit(plugin: PluginContainer) {
+    val configObjectPair = config.loadOrCreateConfig(plugin, TestConfig())
+    val configObject = configObjectPair.first!! // it is null when the TestConfig is not presented
+    plugin.logger.info(configObject.test) //"test"
+}
+
+data class TestConfig(
+    val test: String = "test"
+) : ConfigObject
+```
+### Creating custom `DataConverter`
+Example of making config that uses custom data type.
+
+```kt
+class JsonConverter : DataConverter<JsonObject> { //`JsonObject` is value that is used by whatever data you have chosen
+    override val default: JsonObject = JsonObject() //default value
+    override val extension: String = "json" //extension of the file
+
+    //converting data to the type of data you have chosen
+    override fun convertObject(data: Any): JsonObject {
+        return gson.toJsonTree(data).asJsonObject
+    } 
+
+    // parsing data from string to the type of data you have chosen
+    override fun parseData(string: String): JsonObject {
+        return gson.fromJson(string, JsonObject::class.java)
     }
-    
-    companion object {  // !! THIS PART IS REQUIRED TO WORK OTHERWISE IT WILL FAIL !!
-        private val handler = Handler<TestEvent>()
-        fun getHandler(): Handler<TestEvent> {
-            return handler
-        }
-    }
+
+    //converting data to string
+    override fun convertToString(data: JsonObject): String = gson.toJson(data)
+
+    //parsing data, it is implemented by default, but it is the best to override it and make it more efficient
+    override fun parseData(path: Path): JsonObject {
+        val file = path.toFile()
+        val reader = JsonReader(FileReader(file))
+        return JsonParser.parseReader(reader).asJsonObject
+    } 
+
+    companion object {
+        private val gson = GsonBuilder().setPrettyPrinting().create()
+    } 
 }
 ```

@@ -4,6 +4,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import com.google.gson.stream.JsonReader
+import io.github.mosaicmc.mosaiccore.config.ConfigObject
 import io.github.mosaicmc.mosaiccore.config.DataConverter
 import java.io.FileReader
 import java.nio.file.Path
@@ -12,7 +13,7 @@ class JsonConverter : DataConverter<JsonObject> {
     override val default: JsonObject = JsonObject()
     override val extension: String = "json"
 
-    override fun convertObject(data: Any): JsonObject {
+    override fun <Object : ConfigObject> convertObject(data: Object): JsonObject {
         return gson.toJsonTree(data).asJsonObject
     }
 

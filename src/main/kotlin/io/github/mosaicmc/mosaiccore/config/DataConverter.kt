@@ -25,7 +25,7 @@ interface DataConverter<T> {
      * @param data the object to be converted.
      * @return the converted object of type T.
      */
-    fun convertObject(data: Any): T
+    fun <Object : ConfigObject> convertObject(data: Object): T
 
     /**
      * Parses the data from the specified file path.
