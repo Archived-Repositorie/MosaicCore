@@ -5,6 +5,7 @@ import kotlin.reflect.KFunction1
 import kotlin.reflect.full.functions
 import kotlin.reflect.full.valueParameters
 
+@Deprecated("Use EventHandlerBuilder instead")
 /**
  * Event handler is a class that handles all events.
  */
@@ -19,9 +20,7 @@ object EventHandler {
      * @throws IllegalArgumentException if the event is already registered.
      */
     fun <E : Event> registerEvent(event: KClass<E>) {
-        if (events.containsKey(event)) {
-            throw IllegalArgumentException("Event ${event.simpleName} is already registered!")
-        }
+        require(!events.containsKey(event)) { "Event ${event.simpleName} is already registered!" }
         val handler: Handler<E> = Handler()
         events[event] = handler
     }
@@ -33,9 +32,7 @@ object EventHandler {
      * @throws IllegalArgumentException if the event is not registered.
      */
     fun <E : Event> unregisterEvent(event: KClass<E>) {
-        if (!events.containsKey(event)) {
-            throw IllegalArgumentException("Event ${event.simpleName} is not registered!")
-        }
+        require(events.containsKey(event)) { "Event ${event.simpleName} is not registered!" }
         events.remove(event)
     }
 
