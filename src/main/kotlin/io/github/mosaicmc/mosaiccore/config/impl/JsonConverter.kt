@@ -9,6 +9,9 @@ import io.github.mosaicmc.mosaiccore.config.DataConverter
 import java.io.FileReader
 import java.nio.file.Path
 
+/**
+ * A data converter that converts configuration data to and from JSON.
+ */
 class JsonConverter : DataConverter<JsonObject> {
     override val default: JsonObject = JsonObject()
     override val extension: String = "json"

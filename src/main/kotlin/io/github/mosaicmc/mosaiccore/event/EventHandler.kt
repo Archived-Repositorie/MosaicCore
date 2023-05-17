@@ -39,6 +39,14 @@ object EventHandler {
         events.remove(event)
     }
 
+    fun <E : Event> registerSubscriber(
+        event: KClass<E>,
+        subscriberData: SubscriberData = SubscriberData(),
+        function: (E) -> Unit,
+    ) {
+        registerSubscriber(event, function, subscriberData)
+    }
+
     /**
      * Registers a new subscriber for the specified event.
      *
@@ -101,7 +109,7 @@ object EventHandler {
      * Calls the specified event and invokes all its subscribers.
      *
      * @param event the event to call.
-     * @return true if the event was cancelled, false otherwise.
+     * @return true if the event was canceled, false otherwise.
      * @throws IllegalArgumentException if the event is not registered.
      */
     fun <E : Event> callEvent(event: E): Boolean {
@@ -130,8 +138,8 @@ object EventHandler {
      */
     private fun <E : Event> unregisterSubscriber(
         event: KClass<E>,
-        subscriber: KFunction1<E, Unit>,
-        subscriberData: Subscriber
+        subscriber: (E) -> Unit,
+        subscriberData: SubscriberData = SubscriberData()
     ) {
         getHandler(event).remove(subscriber, subscriberData, null)
     }
@@ -145,8 +153,8 @@ object EventHandler {
      */
     private fun <E : Event> registerSubscriber(
         event: KClass<E>,
-        subscriber: KFunction1<E, Unit>,
-        subscriberData: Subscriber
+        subscriber: (E) -> Unit,
+        subscriberData: SubscriberData = SubscriberData()
     ) {
         getHandler(event).add(subscriber, subscriberData, null)
     }
@@ -162,8 +170,8 @@ object EventHandler {
      */
     private fun <E : Event> registerSubscriber(
         event: KClass<E>,
-        subscriber: KFunction1<E, Unit>,
-        subscriberData: Subscriber,
+        subscriber: (E) -> Unit,
+        subscriberData: SubscriberData = SubscriberData(),
         listener: Listener
     ) {
         getHandler(event).add(subscriber, subscriberData, listener)
@@ -179,8 +187,8 @@ object EventHandler {
      */
     private fun <E : Event> unregisterSubscriber(
         event: KClass<E>,
-        subscriber: KFunction1<E, Unit>,
-        subscriberData: Subscriber,
+        subscriber: (E) -> Unit,
+        subscriberData: SubscriberData = SubscriberData(),
         listener: Listener
     ) {
         getHandler(event).remove(subscriber, subscriberData, listener)
@@ -193,10 +201,11 @@ object EventHandler {
      * @param event the event object to pass to the function.
      */
     private fun <E : Event> callSubscriber(key: Handler.Key<out E>, event: E) {
+        val subscriber = key.subscriber as (E) -> Unit
         if (key.listener == null) {
-            key.subscriber.call(event)
+            subscriber.invoke(event)
         } else {
-            key.subscriber.call(key.listener, event)
+            (subscriber as KFunction1<Event, Unit>).call(key.listener,event)
         }
     }
 
@@ -208,7 +217,7 @@ object EventHandler {
      */
     private fun getSubscribers(listener: Listener): List<KFunction1<Event, Unit>> {
         return listener::class.functions
-            .filter { it.annotations.any { annotation -> annotation is Subscriber } }
+            .filter { it.annotations.any { annotation -> annotation is SubscriberData } }
             .filterIsInstance<KFunction1<Event, Unit>>()
     }
 
@@ -218,10 +227,10 @@ object EventHandler {
      * @param subscriber the subscriber function for which to retrieve the subscriber data.
      * @return the subscriber object associated with the specified subscriber function.
      */
-    private fun <E : Event> getSubscriberData(subscriber: KFunction1<E, Unit>): Subscriber {
+    private fun <E : Event> getSubscriberData(subscriber: KFunction1<E, Unit>): SubscriberData {
         return subscriber.annotations
-            .filterIsInstance<Subscriber>()
-            .firstOrNull() ?: throw IllegalArgumentException("Subscriber function is not annotated with @Subscriber")
+            .filterIsInstance<SubscriberData>()
+            .firstOrNull() ?: SubscriberData()
     }
 
     /**
@@ -256,9 +265,7 @@ object EventHandler {
      * @throws IllegalArgumentException if the specified event class is not registered.
      */
     private fun <E : Event> checkForEvent(event: KClass<out E>): KClass<out E> {
-        if (!events.containsKey(event)) {
-            throw IllegalArgumentException("Event ${event.simpleName} is not registered!")
-        }
+        require(events.containsKey(event)) { "Event ${event.simpleName} is not registered" }
         return event
     }
 }

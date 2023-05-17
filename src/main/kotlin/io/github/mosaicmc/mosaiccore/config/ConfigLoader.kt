@@ -1,11 +1,11 @@
 package io.github.mosaicmc.mosaiccore.config
 
+import com.google.gson.JsonObject
 import io.github.mosaicmc.mosaiccore.config.impl.JsonConverter
 import io.github.mosaicmc.mosaiccore.plugin.PluginContainer
 import net.fabricmc.loader.api.FabricLoader
 import java.nio.file.Files
 import java.nio.file.Path
-import java.util.*
 
 /**
  * A generic configuration loader that loads configuration data from a file on disk or creates a new one if it doesn't
@@ -15,7 +15,7 @@ import java.util.*
  */
 class ConfigLoader<T>(private val dataConverter: DataConverter<T>) {
     /**
-     * Loads or creates a configuration file with the specified [name] for the given [PluginContainer].
+     * Loads or creates a configuration file from [PluginContainer].
      *
      * @param plugin the plugin container that identifies the plugin to load the configuration for
      * @param configObject an optional configuration object to use if no file exists yet
@@ -30,7 +30,7 @@ class ConfigLoader<T>(private val dataConverter: DataConverter<T>) {
     /**
      * Loads or creates a configuration file with the specified [name].
      *
-     * @param name the name of the configuration file (without extension)
+     * @param name the name of the configuration file (without an extension)
      * @param configObject an optional configuration object to use if no file exists yet
      *
      * @return a pair containing the loaded configuration object (or the given [configObject] if it was provided)
@@ -68,6 +68,9 @@ class ConfigLoader<T>(private val dataConverter: DataConverter<T>) {
     }
 
     companion object {
-        val JSON_CONFIG = ConfigLoader(JsonConverter())
+        /**
+         * A configuration loader that uses JSON as its data format.
+         */
+        val JSON_CONFIG: ConfigLoader<JsonObject> = ConfigLoader(JsonConverter())
     }
 }
