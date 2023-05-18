@@ -2,10 +2,9 @@
 package io.github.mosaicmc.mosaiccore
 
 import io.github.mosaicmc.mosaiccore.event.Event
-import io.github.mosaicmc.mosaiccore.event.Priority
-import io.github.mosaicmc.mosaiccore.event.SubscriberData
-import io.github.mosaicmc.mosaiccore.event.eventHandler
+import io.github.mosaicmc.mosaiccore.event.listener
 import io.github.mosaicmc.mosaiccore.plugin.BeforePluginInitializer
+import io.github.mosaicmc.mosaiccore.plugin.PluginContainer
 import io.github.mosaicmc.mosaiccore.plugin.PluginInitializer
 import net.fabricmc.loader.api.FabricLoader
 import org.slf4j.LoggerFactory
@@ -23,11 +22,12 @@ fun preInit() {
     }
 }
 
-fun test() = eventHandler {
-    subscriber<TestEvent>(SubscriberData(Priority.HIGH)) {
+fun test(plugin: PluginContainer) = listener(plugin) {
+    subscriber(TestEvent::class) {
         println("Test event")
     }
 }.register()
+
 
 class TestEvent : Event
 

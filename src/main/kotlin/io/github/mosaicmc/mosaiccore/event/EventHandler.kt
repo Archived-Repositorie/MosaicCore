@@ -5,7 +5,7 @@ import kotlin.reflect.KFunction1
 import kotlin.reflect.full.functions
 import kotlin.reflect.full.valueParameters
 
-@Deprecated("Use EventHandlerBuilder instead")
+@Deprecated("Use EventHandlerBuilder instead", level = DeprecationLevel.HIDDEN )
 /**
  * Event handler is a class that handles all events.
  */
