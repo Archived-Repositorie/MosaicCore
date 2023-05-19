@@ -1,8 +1,9 @@
+@file:Suppress("KDocMissingDocumentation", "UNUSED")
+
 
 package io.github.mosaicmc.mosaiccore
 
-import io.github.mosaicmc.mosaiccore.event.Event
-import io.github.mosaicmc.mosaiccore.event.listener
+import io.github.mosaicmc.mosaiccore.event.*
 import io.github.mosaicmc.mosaiccore.plugin.BeforePluginInitializer
 import io.github.mosaicmc.mosaiccore.plugin.PluginContainer
 import io.github.mosaicmc.mosaiccore.plugin.PluginInitializer
@@ -14,19 +15,28 @@ internal val logger = LoggerFactory.getLogger("mosaicmc")
 internal val plugins = FabricLoader.getInstance().getEntrypointContainers("plugin", PluginInitializer::class.java)
 internal val beforePlugins = FabricLoader.getInstance().getEntrypointContainers("before_plugin", BeforePluginInitializer::class.java)
 
-@Suppress("unused")
 fun preInit() {
     logger.info("Welcome to mosaicmc!")
-    if(System.getenv("TEST") == "true") {
-        logger.info("Test mode enabled")
-    }
+    EventHandler.registerEvent(TestEvent::class)
 }
 
-fun test(plugin: PluginContainer) = listener(plugin) {
-    subscriber(TestEvent::class) {
-        println("Test event")
-    }
-}.register()
+fun test(plugin: PluginContainer) {
+    listener(plugin) {
+        subscriber(TestEvent::class) {
+            plugin.logger.info("Test event called! 0")
+        }
+        subscriber(TestEvent::class) {
+            plugin.logger.info("Test event called! 1")
+        }
+        subscriber(TestEvent::class, SubscriberData(Priority.HIGHEST)) {
+            plugin.logger.info("Test event called! 2")
+        }
+        subscriber(TestEvent::class) {
+            plugin.logger.info("Test event called! 3")
+        }
+    }.register()
+    EventHandler.callEvent(TestEvent())
+}
 
 
 class TestEvent : Event

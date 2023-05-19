@@ -28,9 +28,5 @@ data class PluginContainer (
     fun idOf(path: String): Identifier {
         return Identifier(name, path)
     }
-
-    constructor(modContainer: ModContainer, server: MinecraftServer) :
-            this(modContainer, server, modContainer.metadata.id, LoggerFactory.getLogger(modContainer.metadata.id))
-
 }
 

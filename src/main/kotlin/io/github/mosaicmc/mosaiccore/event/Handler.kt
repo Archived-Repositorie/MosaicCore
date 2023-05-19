@@ -1,65 +1,37 @@
 package io.github.mosaicmc.mosaiccore.event
 
+import io.github.mosaicmc.mosaiccore.plugin.PluginContainer
+import kotlin.reflect.KClass
 
-/**
- * The Handler class is responsible for managing a list of subscribers for a specific event type [E].
- * The subscribers are sorted by priority and are executed in that order.
- * @param E the type of event that this handler is responsible for.
- */
-class Handler<E : Event> : Iterable<Handler.Key<E>> {
-    private val values: MutableList<Key<E>> = mutableListOf()
-
+class Handler<E : Event>(
+    private val values: MutableList<SubscriberObject<E>> = mutableListOf()
+) {
     /**
-     * The [Key] class represents a subscriber and its associated data, including the [SubscriberData] annotation
-     * and the instance of the listener class.
-     * @param subscriber the function that will be called when an event is dispatched.
-     * @param data the [SubscriberData] annotation that contains information about the subscriber.
-     * @param listener the instance of the listener class.
+     * Remove
+     *
+     * Remove is a function that removes a subscriber from the handler
+     * @param key The subscriber object
      */
-    data class Key<E : Event>(
-        val subscriber: (E) -> Unit,
-        val data: SubscriberData,
-        val listener: Listener?
-    ) : Comparable<Key<E>> {
-        override fun compareTo(other: Key<E>): Int {
-            return this.data.priority.compareTo(other.data.priority)
-        }
-    }
-
-    /**
-     * Adds a subscriber to the handler's list of subscribers.
-     * @param subscriber the function that will be called when an event is dispatched.
-     * @param data the [SubscriberData] annotation that contains information about the subscriber.
-     * @param listener the instance of the listener class.
-     */
-    fun add(subscriber: (E) -> Unit, data: SubscriberData, listener: Listener?) {
-        add(Key(subscriber, data, listener))
-    }
-
-    /**
-     * Removes a subscriber from the handler's list of subscribers.
-     * @param subscriber the function that will be removed from the list of subscribers.
-     * @param data the [SubscriberData] annotation associated with the subscriber.
-     * @param listener the instance of the listener class.
-     */
-    fun remove(subscriber: (E) -> Unit, data: SubscriberData, listener: Listener?) {
-        remove(Key(subscriber, data, listener))
-    }
-
-    override fun iterator(): Iterator<Key<E>> {
-        return values.iterator()
-    }
-
-    private fun remove(key: Key<E>) {
+    fun remove(key: SubscriberObject<E>) {
         values.remove(key)
     }
 
-    private fun add(valueKey: Key<E>) {
+    /**
+     * Add
+     *
+     * Add is a function that adds a subscriber to the handler
+     * @param valueKey The subscriber object
+     */
+    fun add(valueKey: SubscriberObject<E>) {
         val index = getSortedPlace(valueKey)
         values.add(index, valueKey)
     }
 
-    private fun getSortedPlace(key: Key<E>): Int {
+    fun forEach(action: (SubscriberObject<E>) -> Unit) {
+        values.forEach(action)
+    }
+
+    private fun getSortedPlace(key: SubscriberObject<E>): Int {
         var left = 0
         var right = values.size - 1
         while (left <= right) {
@@ -71,5 +43,36 @@ class Handler<E : Event> : Iterable<Handler.Key<E>> {
             }
         }
         return left
+    }
+
+    /**
+     * Subscriber object
+     *
+     * Subscriber object is a data class that holds the subscriber data and the subscriber function
+     * @param E
+     * @property eventClass The event class
+     * @property data The subscriber data
+     * @property function The subscriber function
+     * @property plugin The plugin container
+     */
+    data class SubscriberObject<E : Event>(
+        val eventClass: KClass<E>,
+        val data: SubscriberData,
+        val function: Subscriber<E>,
+        val plugin: PluginContainer
+    ) : Comparable<SubscriberObject<E>> {
+        override fun compareTo(other: SubscriberObject<E>): Int {
+            return data.priority.compareTo(other.data.priority)
+        }
+    }
+
+    /**
+     * Subscriber
+     *
+     * Subscriber is a functional interface that accepts an event object
+     * @param E The event type
+     */
+    fun interface Subscriber<E : Event> {
+        fun accept(event: E)
     }
 }
