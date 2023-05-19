@@ -1,8 +1,8 @@
 # MosaicCore Documentation
 ## What is MosaicCore?
-MosaicCore is loader/library made as core for MosaicMC to have base to implement features. It can be seen as plugin loader or very extended library for fabric.
+MosaicCore is a loader/library designed as the core for MosaicMC, providing a foundation for implementing features. It can be seen as a plugin loader or an extended library for Fabric.
 ## Usage
-1. Add modrinth repository to build.gradle
+1. Add the Modrinth repository to your `build.gradle` file:
 ```groovy
 repositories {
     // ...
@@ -11,7 +11,7 @@ repositories {
     }
 }
 ```
-2. Add dependience (replace `{version}` with latest version found [here](https://modrinth.com/mod/mosaiccore/versions))
+2. Add the dependency to your `build.gradle` file, replacing `{version}` with the latest version found [here](https://modrinth.com/mod/mosaiccore/versions):
 ```groovy
 dependencies {
     // Adding and remapping a mod only in local runtime
@@ -30,54 +30,28 @@ dependencies {
     ]
   },
 ```
-2. Your plugin entrypoint (if it is class/object) requires to implement interface called `PluginInitializer` which will have function called `onLoad`, it will contain in the argument the `PluginContainer` which contains informations about plugin and also the function will be executed before the server loader. If wanted to use different methods of doing it, look at readme of [fabric-language-kotlin](https://github.com/FabricMC/fabric-language-kotlin#entrypoint-samples).
+2. To create a plugin, you need to add an entrypoint called `plugin` to your `fabric.mod.json` file under the `Entrypoints` key. Replace `plugin.entrypoint.PluginObject` with the value that represents your function/class/object. For alternative methods, refer to the readme of [fabric-language-kotlin](https://github.com/FabricMC/fabric-language-kotlin#entrypoint-samples).
 ```kt
-object PluginObject : PluginInitializer {
-    override fun onLoad(plugin: PluginContainer) {
-        plugin.logger.info("Hello there!")
-    }
+fun onLoad(plugin: PluginContainer) {
+    plugin.logger.info("Hello there!")
 }
 ```
 
 ## Event system
-### Registering subscriber
-Registering subscriber can be done through listener using `EventHandler.registerListener(EventListener)`. Listener needs to implement `Listener` interface.</br>
-Or registering the subscriber itself using `EventHandler.registerSubscriber(::test)`.</br>
-Example usage:
-```kt
-fun test() {
-    EventHandler.registerListener(EventListener)
-    EventHandler.registerSubscriber(::test)
-}
-
-object EventListener : Listener { 
-    @Subscriber 
-    fun test(event: TestEvent)
-}
-
-@Subscriber
-fun test(event: TestEvent)
-```
-### Subscriber
-Subscriber is a function that subscribe on specific event, it has many way of registering. Either by using listener or using the function itself.
-Subscriber can also handle priority and can ignore cancellation.</br>
+### Using DSL Listener
+The DSL Listener utilizes Kotlin's DSL feature, which allows for cleaner event handling compared to other event systems. Here's an example usage:
 Example usage: 
 ```kt
-object EventListener : Listener { 
-    @Subscriber(priority = Priority.HIGHEST, ignoreCancelled = true) 
-    fun test(event: TestEvent)
-}
-```
-```kt
-@Subscriber(priority = Priority.HIGHEST, ignoreCancelled = true)
-fun test(event: TestEvent)
+fun test(plugin: PluginContainer) = listener(plugin) {
+    subscriber(TestEvent::class, SubscriberData(Priority.HIGHEST)) {
+        plugin.logger.info("Test event called! 2")
+    }
+}.register()
 ```
 ### Custom event
-Custom event is class which subscriber can subscribe on. Event also needs to be registered using `EventHandler.registerEvent(TestEvent::class)`. Events can be cancellable by implementing `Cancellable` interface and also can be laggy by annotating `@Laggy`
-which will force user to OptIn and also will warn them from usage of the event. They can be called by using `EventHandler.callEvent(TestEvent)`
-</br>
-It is advice to register events on before plugin load, so they can be registered before any subscriber is registered.
-Example of simple event:
+A custom event is a class to which subscribers can subscribe. To use custom events, they need to be registered using `EventHandler.registerEvent(TestEvent::class)`. Events can be cancellable by implementing the `Cancellable` interface and can be flagged as laggy by annotating `@Laggy`, which requires opting in and warns against its usage. Custom events can be triggered using `EventHandler.callEvent(TestEvent())`.
+<br>
+It is recommended to register events before plugin load to ensure they are registered before any subscribers. Here's an example of a simple event:
 ```kt
 fun test() {
     EventHandler.registerEvent(TestEvent::class)
@@ -106,7 +80,7 @@ class TestEvent : Event, CancellableEvent {
 }
 ```
 ## Config system
-Mod contains a very flexible config system which can be used by any plugin. It gives ability for developers to also add different types of data for config.
+Mod contains a very flexible config system which can be used by any plugin. It gives the ability for developers to also add different types of data for config.
 ### Using config (JSON)
 Example of making config that uses default json data type.
 
