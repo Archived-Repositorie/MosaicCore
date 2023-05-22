@@ -1,76 +1,122 @@
+@file:Suppress("KDocMissingDocumentation", "UNUSED")
+
 package io.github.mosaicmc.mosaiccore.config
 
 import com.google.gson.JsonObject
-import io.github.mosaicmc.mosaiccore.config.impl.JsonConverter
+import io.github.mosaicmc.mosaiccore.config.ConfigLoader.ExtendedUpdater
+import io.github.mosaicmc.mosaiccore.config.ConfigLoader.Updater
+import io.github.mosaicmc.mosaiccore.config.impl.SimpleJsonCoder
 import io.github.mosaicmc.mosaiccore.plugin.PluginContainer
 import net.fabricmc.loader.api.FabricLoader
-import java.nio.file.Files
+import java.io.File
 import java.nio.file.Path
 
-/**
- * A generic configuration loader that loads configuration data from a file on disk or creates a new one if it doesn't
- * exist yet.
- *
- * @param dataConverter the data converter that converts the configuration data between its serialized and deserialized forms
- */
-class ConfigLoader<T>(private val dataConverter: DataConverter<T>) {
-    /**
-     * Loads or creates a configuration file from [PluginContainer].
-     *
-     * @param plugin the plugin container that identifies the plugin to load the configuration for
-     * @param configObject an optional configuration object to use if no file exists yet
-     *
-     * @return a pair containing the loaded configuration object (or the given [configObject] if it was provided)
-     * and the configuration data
-     */
-    fun <Object : ConfigObject> loadOrCreateConfig(plugin: PluginContainer, configObject: Object? = null): Pair<Object?, T> {
-        return loadOrCreateConfig(plugin.name, configObject)
+class ConfigLoader<T>(private val dataCoder: DataCoder<T>) {
+
+    fun <O : ConfigData> loadOrCreateConfig(
+        plugin: PluginContainer,
+        fileName: String = "common",
+        configData: O,
+        configDataModifier: ExtendedUpdater<O, T> = ExtendedUpdater { it.data }
+    ): ExtendedConfigKey<O, T> {
+        val file = getConfigPath(plugin,fileName).toFile() /* gets file */
+        val dataObject = dataCoder.convertObject(configData) /* converts configData to dataObject */
+        val data = loadOrWrite(file, dataObject) /* loads or writes dataObject to file */
+        val configObject = dataCoder.convertToObject(data, configData.javaClass) /* converts data to configObject */
+        val key = ExtendedConfigKey(file, configObject, data) /* creates key */
+        val modifiedConfig = configDataModifier.update(key) /* modifies config */
+        val modifiedData = dataCoder.convertObject(modifiedConfig) /* converts modified config to modified data */
+
+        return ExtendedConfigKey(file, modifiedConfig, modifiedData) /* returns key */
     }
 
-    /**
-     * Loads or creates a configuration file with the specified [name].
-     *
-     * @param name the name of the configuration file (without an extension)
-     * @param configObject an optional configuration object to use if no file exists yet
-     *
-     * @return a pair containing the loaded configuration object (or the given [configObject] if it was provided)
-     * and the configuration data
-     */
-    fun <Object : ConfigObject> loadOrCreateConfig(name: String, configObject: Object? = null): Pair<Object?, T> {
-        return loadOrCreateConfig(Path.of("$name.${dataConverter.extension}"), configObject)
+    fun loadOrCreateConfig(
+        plugin: PluginContainer,
+        fileName: String = "common",
+        configData: T = dataCoder.default,
+        configDataModifier: Updater<T> = Updater { it.coderObject }
+    ): ConfigKey<T> {
+        val file = getConfigPath(plugin,fileName).toFile()
+        var data = loadOrWrite(file, configData)
+
+        data = configDataModifier.update(ConfigKey(file,data))
+        return ConfigKey(file,data)
     }
 
-    private fun <Object : ConfigObject> loadOrCreateConfig(path: Path, configObject: Object? = null): Pair<Object?, T> {
-        val configPath = FabricLoader.getInstance().configDir.resolve(path)
+    fun <O : ConfigData> updateExtendedConfig(
+        key: ExtendedConfigKey<O,T>,
+        updater: ExtendedUpdater<O,T>
+    ): T {
+        val data = loadOrWrite(key.file,key.coderObject)
+        val objectData = dataCoder.convertToObject(data, key.data.javaClass)
+        val updatedData = updater.update(ExtendedConfigKey(key.file,objectData,data))
+        val updatedConfig = dataCoder.convertObject(updatedData)
 
-        val configData = if (Files.notExists(configPath)) {
-            getDefaultOrWriteData(configPath, configObject)
-        } else {
-            dataConverter.parseData(configPath)
+        if (updatedConfig != data) {
+            writeConfig(key.file, updatedConfig)
         }
+        return updatedConfig
+    }
 
-        return if (configObject != null) {
-            Pair(configObject, configData)
+    fun updateConfig(
+        key: ConfigKey<T>,
+        updater: Updater<T>
+    ): T {
+        val data = loadOrWrite(key.file,key.coderObject)
+        val updatedData = updater.update(ConfigKey(key.file,data))
+        if (updatedData != data) {
+            writeConfig(key.file, updatedData)
+        }
+        return updatedData
+    }
+
+    private fun loadOrWrite(
+        file: File,
+        toWrite: T = dataCoder.default
+    ): T {
+        return if (file.exists()) {
+            loadConfig(file)
         } else {
-            Pair(null, configData)
+            writeConfig(file, toWrite)
         }
     }
 
-    private fun <Object : ConfigObject> getDefaultOrWriteData(configPath: Path, configObject: Object? = null): T {
-        Files.createFile(configPath)
-        val dataToUse: T = if (configObject != null) {
-            dataConverter.convertObject(configObject)
-        } else {
-            dataConverter.default
-        }
-        Files.writeString(configPath, dataConverter.convertToString(dataToUse))
-        return dataToUse
+    private fun loadConfig(file: File): T = dataCoder.decodeFile(file)
+
+    private fun writeConfig(file: File, data: T): T {
+        createConfig(file)
+        dataCoder.encodeToFile(data, file)
+        return data
     }
+
+    private fun createConfig(file: File) {
+        val path = file.parentFile
+        if (!path.exists()) {
+            path.mkdirs()
+        }
+        if (!file.exists()) {
+            file.createNewFile()
+        }
+    }
+
+    private fun getConfigPath(plugin: PluginContainer, fileName: String): Path = getConfigPath("${plugin.name}/$fileName.${dataCoder.extension}")
+
+    private fun getConfigPath(path: Path): Path = FabricLoader.getInstance().configDir.resolve(path)
+
+    private fun getConfigPath(path: String): Path = getConfigPath(Path.of(path))
 
     companion object {
         /**
          * A configuration loader that uses JSON as its data format.
          */
-        val JSON_CONFIG: ConfigLoader<JsonObject> = ConfigLoader(JsonConverter())
+        val SIMPLE_JSON_CONFIG: ConfigLoader<JsonObject> = ConfigLoader(SimpleJsonCoder())
+    }
+
+    fun interface Updater<T> {
+        fun update(data: ConfigKey<T>): T
+    }
+
+    fun interface ExtendedUpdater<O : ConfigData,T> {
+        fun update(data: ExtendedConfigKey<O,T>): O
     }
 }

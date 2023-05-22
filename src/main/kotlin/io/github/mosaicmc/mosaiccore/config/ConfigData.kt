@@ -3,4 +3,4 @@ package io.github.mosaicmc.mosaiccore.config
 /**
  * Represents a config object.
  */
-interface ConfigObject
+interface ConfigData
