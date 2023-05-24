@@ -120,3 +120,5 @@ class ConfigLoader<T>(private val dataCoder: DataCoder<T>) {
         fun update(data: ExtendedConfigKey<O,T>): O
     }
 }
+
+typealias JsonCoder = DataCoder<JsonObject>

@@ -6,7 +6,7 @@ import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
 import io.github.mosaicmc.mosaiccore.config.ConfigData
-import io.github.mosaicmc.mosaiccore.config.DataCoder
+import io.github.mosaicmc.mosaiccore.config.JsonCoder
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
@@ -14,7 +14,7 @@ import java.io.FileWriter
 /**
  * A data converter that converts configuration data to and from JSON.
  */
-class SimpleJsonCoder : DataCoder<JsonObject> {
+class SimpleJsonCoder : JsonCoder {
     override val default: JsonObject = JsonObject()
     override val extension: String = "json"
 

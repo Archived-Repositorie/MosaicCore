@@ -6,7 +6,7 @@ import kotlin.reflect.KClass
  * Event handler
  */
 object EventHandler {
-    private val events: HashMap<KClass<out Event>, Handler<out Event>> = HashMap()
+    private val events: EventMap = HashMap()
 
     /**
      * Register DSL
@@ -57,3 +57,5 @@ object EventHandler {
         return eventClass
     }
 }
+
+internal typealias EventMap = HashMap<KClass<out Event>, Handler<out Event>>
