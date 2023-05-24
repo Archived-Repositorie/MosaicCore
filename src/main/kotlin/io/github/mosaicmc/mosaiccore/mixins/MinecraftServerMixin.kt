@@ -17,6 +17,7 @@ class MinecraftServerMixin {
         method = ["runServer"]
     )
     private fun pluginLoader(info: CallbackInfo) {
+        println("owo")
         val beforePlugins = beforePlugins
         for (plugin in beforePlugins) {
             val entryPoint = plugin.entrypoint
