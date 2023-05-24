@@ -43,7 +43,7 @@ The DSL Listener utilizes Kotlin's DSL feature, which allows for cleaner event h
 Example usage: 
 ```kt
 fun test(plugin: PluginContainer) = listener(plugin) {
-    subscriber(TestEvent::class, SubscriberData(Priority.HIGHEST)) {
+    subscriber<TestEvent>(SubscriberData(Priority.HIGHEST)) {
         plugin.logger.info("Test event called! 2")
     }
 }.register()
@@ -79,7 +79,7 @@ class TestEvent : Event, CancellableEvent {
     override var cancelled: Boolean = false
 }
 ```
-## Config system
+## Config system 
 Mod contains a very flexible config system which can be used by any plugin. It gives the ability for developers to also add different types of data for config.
 ### Using config (JSON)
 Example of making config that uses default json data type.
