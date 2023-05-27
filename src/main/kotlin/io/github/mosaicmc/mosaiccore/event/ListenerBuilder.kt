@@ -1,5 +1,7 @@
+@file:Suppress("unused","deprecation")
 package io.github.mosaicmc.mosaiccore.event
 
+import io.github.mosaicmc.mosaiccore.event.subscriber.SubscriberData
 import io.github.mosaicmc.mosaiccore.plugin.PluginContainer
 import kotlin.reflect.KClass
 
@@ -25,6 +27,7 @@ class ListenerBuilder(
      * @param data The subscriber data
      * @param function The subscriber function
      */
+    @Deprecated("Use reified version instead", ReplaceWith("subscriber(data, function)"))
     fun <E : Event> subscriber(
         eventClazz: KClass<E>,
         data: SubscriberData = SubscriberData(),

@@ -105,19 +105,19 @@ class ConfigLoader<T>(private val dataCoder: DataCoder<T>) {
 
     private fun getConfigPath(path: String): Path = getConfigPath(Path.of(path))
 
-    companion object {
-        /**
-         * A configuration loader that uses JSON as its data format.
-         */
-        val SIMPLE_JSON_CONFIG: ConfigLoader<JsonObject> = ConfigLoader(SimpleJsonCoder())
-    }
-
     fun interface Updater<T> {
         fun update(data: ConfigKey<T>): T
     }
 
     fun interface ExtendedUpdater<O : ConfigData,T> {
         fun update(data: ExtendedConfigKey<O,T>): O
+    }
+
+    companion object {
+        /**
+         * A configuration loader that uses JSON as its data format.
+         */
+        val SIMPLE_JSON_CONFIG: ConfigLoader<JsonObject> = ConfigLoader(SimpleJsonCoder())
     }
 }
 

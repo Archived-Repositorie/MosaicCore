@@ -14,10 +14,19 @@ object EventHandler {
      * Register DSL is a helper function that registers all subscribers to the event handler
      * @param list The list of subscriber objects
      */
-    internal fun registerDSL(list: List<Handler.SubscriberObject<out Event>>) {
+    internal fun registerDSL(
+        list: List<Handler.SubscriberObject<out Event>>
+    ) {
         list.forEach {
             registerSubscriber(it)
         }
+    }
+
+    @Deprecated("Use reified version instead", ReplaceWith("registerEvent(eventClass)"))
+    fun <E : Event> registerEvent(eventClass: KClass<E>) {
+        if (events.containsKey(eventClass)) return
+        val handler: Handler<E> = Handler()
+        events[eventClass] = handler
     }
 
     /**
@@ -28,27 +37,16 @@ object EventHandler {
      * @param E
      * @param eventClass
      */
-    fun <E : Event> registerEvent(eventClass: KClass<E>) {
-        checkForEvent(eventClass, false)
-        val handler: Handler<E> = Handler()
-        events[eventClass] = handler
+    inline fun <reified E: Event> registerEvent() {
+        registerEvent(E::class)
     }
 
     fun <E : Event> callEvent(event: E) {
-        checkForEvent(event::class, true)
-        @Suppress("UNCHECKED_CAST")
-        val handler: Handler<E> = events[event::class] as Handler<E>
-        handler.forEach { it.function.accept(event) }
+        (getHandler(event::class) as Handler<E>).forEach { it.function.accept(event) }
     }
 
-    private fun <E : Event> registerSubscriber(
-        sub: Handler.SubscriberObject<E>,
-    ) {
-        checkForEvent(sub.eventClass, true)
-        @Suppress("UNCHECKED_CAST")
-        val handler: Handler<E> = events[sub.eventClass] as Handler<E>
-        handler.add(sub)
-    }
+    private fun <E : Event> registerSubscriber(sub: Handler.SubscriberObject<E>) =
+        (getHandler<Event>() as Handler<E>).add(sub)
 
     private fun <E : Event> checkForEvent(eventClass: KClass<E>, doesContain: Boolean): KClass<E> {
         require(events.containsKey(eventClass) == doesContain) {
@@ -56,6 +54,14 @@ object EventHandler {
         }
         return eventClass
     }
+
+    private fun <E : Event> getHandler(eventKClass: KClass<E>): Handler<E> {
+        checkForEvent(eventKClass, true)
+        @Suppress("UNCHECKED_CAST")
+        return events[eventKClass] as Handler<E>
+    }
+
+    private inline fun <reified E : Event> getHandler(): Handler<E> = getHandler(E::class)
 }
 
 internal typealias EventMap = HashMap<KClass<out Event>, Handler<out Event>>

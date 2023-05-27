@@ -1,4 +1,4 @@
-package io.github.mosaicmc.mosaiccore.event
+package io.github.mosaicmc.mosaiccore.event.additions
 
 /**
  * An annotation indicating that an event may cause performance issues due to lag.

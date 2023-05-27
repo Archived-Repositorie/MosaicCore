@@ -1,4 +1,4 @@
-package io.github.mosaicmc.mosaiccore.event
+package io.github.mosaicmc.mosaiccore.event.subscriber
 
 /**
  * Annotation used to mark methods to be used as event subscribers.
