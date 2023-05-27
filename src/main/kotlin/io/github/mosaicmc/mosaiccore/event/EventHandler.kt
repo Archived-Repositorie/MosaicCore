@@ -45,10 +45,9 @@ object EventHandler {
         (getHandler(event::class) as Handler<E>).forEach { it.function.accept(event) }
     }
 
-    private fun <E : Event> registerSubscriber(sub: Handler.SubscriberObject<E>) =
-        (getHandler<Event>() as Handler<E>).add(sub)
+    private fun <E : Event> registerSubscriber(sub: Handler.SubscriberObject<E>) = getHandler(sub.eventClass).add(sub)
 
-    private fun <E : Event> checkForEvent(eventClass: KClass<E>, doesContain: Boolean): KClass<E> {
+    private fun <E : Event> checkForEvent(eventClass: KClass<E>, doesContain: Boolean = true): KClass<E> {
         require(events.containsKey(eventClass) == doesContain) {
             "Event ${eventClass.simpleName} is ${if (doesContain) "not" else "already"} registered!"
         }
@@ -56,7 +55,7 @@ object EventHandler {
     }
 
     private fun <E : Event> getHandler(eventKClass: KClass<E>): Handler<E> {
-        checkForEvent(eventKClass, true)
+        checkForEvent(eventKClass)
         @Suppress("UNCHECKED_CAST")
         return events[eventKClass] as Handler<E>
     }
