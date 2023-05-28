@@ -1,4 +1,4 @@
-package io.github.mosaicmc.mosaiccore.event
+package io.github.mosaicmc.mosaiccore.event.additions
 
 /**
  * Represents an event that can be canceled.

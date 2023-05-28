@@ -1,5 +1,6 @@
 package io.github.mosaicmc.mosaiccore.event
 
+import io.github.mosaicmc.mosaiccore.event.subscriber.SubscriberData
 import io.github.mosaicmc.mosaiccore.plugin.PluginContainer
 import kotlin.reflect.KClass
 

@@ -1,6 +1,9 @@
+@file:Suppress("unused","deprecation")
 package io.github.mosaicmc.mosaiccore.event
 
+import io.github.mosaicmc.mosaiccore.event.subscriber.SubscriberData
 import io.github.mosaicmc.mosaiccore.plugin.PluginContainer
+import kotlin.reflect.KClass
 
 internal typealias MutList = MutableList<Handler.SubscriberObject<out Event>>
 
@@ -11,25 +14,41 @@ internal typealias MutList = MutableList<Handler.SubscriberObject<out Event>>
  * @property plugin The plugin container
  */
 class ListenerBuilder(
-    val plugin: PluginContainer
+    private val plugin: PluginContainer
 ) {
-    @PublishedApi
-    internal val subs: MutList = mutableListOf()
+    private val subs: MutList = mutableListOf()
+
+    /**
+     * Subscriber
+     *
+     * Subscriber is a function that adds subscriber to listener
+     * @param E The event class
+     * @param eventClazz The event class
+     * @param data The subscriber data
+     * @param function The subscriber function
+     */
+    @Deprecated("Use reified version instead", ReplaceWith("subscriber(data, function)"))
+    fun <E : Event> subscriber(
+        eventClazz: KClass<E>,
+        data: SubscriberData = SubscriberData(),
+        function: Handler.Subscriber<E>
+    ) {
+        subs.add(Handler.SubscriberObject(eventClazz, data, function, plugin))
+    }
 
     /**
      * Subscriber
      *
      * Subscriber is a DSL function that add subscriber to listener
-     * @param E
-     * @param eventClass
-     * @param data
-     * @param function
+     * @param E The event class
+     * @param data The subscriber data
+     * @param function The subscriber function
      */
     inline fun <reified E : Event> subscriber(
         data: SubscriberData = SubscriberData(),
         function: Handler.Subscriber<E>
     ) {
-        subs.add(Handler.SubscriberObject(E::class, data, function, plugin))
+        subscriber(E::class, data, function)
     }
 
     /**
@@ -38,7 +57,7 @@ class ListenerBuilder(
      * Register is a function that registers all subscribers to the event handler.
      * Clears all the subscribers after registering.
      */
-    fun register() {
+    internal fun register() {
         EventHandler.registerDSL(subs.toList())
         subs.clear()
     }
@@ -52,4 +71,7 @@ class ListenerBuilder(
  * @param block The DSL block
  * @receiver The plugin container
  */
-fun listener(plugin: PluginContainer, block: ListenerBuilder.() -> Unit): ListenerBuilder = ListenerBuilder(plugin).apply(block)
+fun listener(plugin: PluginContainer, block: ListenerBuilder.() -> Unit) {
+    val builder = ListenerBuilder(plugin).apply(block)
+    builder.register()
+}

@@ -33,8 +33,6 @@ class SimpleJsonCoder : JsonCoder {
         return JsonParser.parseReader(FileReader(file)).asJsonObject
     }
 
-    override fun validateFile(file: File): Boolean = file.extension == extension
-
     override fun encodeToFile(data: JsonObject, file: File) {
         FileWriter(file).use { writer ->
             gson.toJson(data, writer)
