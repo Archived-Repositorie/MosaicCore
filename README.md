@@ -83,7 +83,7 @@ Mod contains a very flexible config system which can be used by any plugin. It g
 Example of making config that uses default json data type.
 
 ```kt
-internal val config = ConfigLoader.JSON_CONFIG
+internal val config = ConfigLoader.SIMPLE_JSON_CONFIG
 
 fun pluginInit(plugin: PluginContainer) {
     val configObjectPair = config.loadOrCreateConfig(plugin, TestConfig())
