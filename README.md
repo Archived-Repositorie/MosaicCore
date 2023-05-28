@@ -46,15 +46,14 @@ fun test(plugin: PluginContainer) = listener(plugin) {
     subscriber<TestEvent>(SubscriberData(Priority.HIGHEST)) {
         plugin.logger.info("Test event called! 2")
     }
-}.register()
+}
 ```
 ### Custom event
-A custom event is a class to which subscribers can subscribe. To use custom events, they need to be registered using `EventHandler.registerEvent(TestEvent::class)`. Events can be cancellable by implementing the `Cancellable` interface and can be flagged as laggy by annotating `@Laggy`, which requires opting in and warns against its usage. Custom events can be triggered using `EventHandler.callEvent(TestEvent())`.
+A custom event is a class to which subscribers can subscribe. Events can be cancellable by implementing the `Cancellable` interface and can be flagged as laggy by annotating `@Laggy`, which requires opting in and warns against its usage. Custom events can be triggered using `EventHandler.callEvent(TestEvent())`.
 <br>
 It is recommended to register events before plugin load to ensure they are registered before any subscribers. Here's an example of a simple event:
 ```kt
 fun test() {
-    EventHandler.registerEvent(TestEvent::class)
     EventHandler.callEvent(TestEvent())
 }
 
@@ -65,13 +64,12 @@ Example of laggy and cancellable event and usage:
 fun test() { 
     @OptIn(Laggy::class) EventHandler.callEvent(TestEvent())
 }
-fun beforeTest() { 
-    EventHandler.registerListener(EventListener)
-}
 
-data EventListener {
-  @OptIn(Laggy::class) @Subscriber
-  fun test(event: TestEvent)
+fun pluginInit(plugin: PluginContainer) = listener(plugin) {
+    @OptIn(Laggy::class) 
+    subscriber<TestEvent> {
+        plugin.logger.info("Test event called! 2")
+    }
 }
 
 @Laggy
