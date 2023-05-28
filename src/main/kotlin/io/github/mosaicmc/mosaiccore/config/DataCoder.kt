@@ -15,5 +15,5 @@ interface DataCoder<T> {
 
     fun encodeToFile(data: T, file: File)
 
-    fun validateFile(file: File): Boolean
+    fun validateFile(file: File): Boolean = file.extension == extension
 }

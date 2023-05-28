@@ -3,7 +3,7 @@ package io.github.mosaicmc.mosaiccore.config
 import java.io.File
 
 /**
- * Extended config key
+ * Extended a config key
  *
  * Key which stores data about a config file.
  * @param O Config data

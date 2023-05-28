@@ -5,7 +5,6 @@ package io.github.mosaicmc.mosaiccore.event.subscriber
  * @property priority the priority of the subscriber, defaulting to [Priority.NORMAL].
  * @property ignoreCancelled whether events canceled should be ignored, defaulting to false.
  */
-@Suppress("unused")
 annotation class SubscriberData(
     val priority: Priority = Priority.NORMAL,
     val ignoreCancelled: Boolean = false

@@ -1,6 +1,7 @@
 package io.github.mosaicmc.mosaiccore.plugin
 
 import net.fabricmc.loader.api.ModContainer
+import net.fabricmc.loader.api.metadata.ModMetadata
 import net.minecraft.server.MinecraftServer
 import net.minecraft.util.Identifier
 import org.slf4j.Logger
@@ -12,12 +13,14 @@ import org.slf4j.LoggerFactory
  * @property modContainer Represents the mod of the plugin
  * @property name The name of the plugin.
  * @property server The server.
+ * @property metadata The metadata of the plugin
  * @property logger The logger.
  */
 data class PluginContainer (
     val modContainer: ModContainer,
     val server: MinecraftServer,
-    val name: String = modContainer.metadata.id,
+    val metadata: ModMetadata = modContainer.metadata,
+    val name: String = metadata.id,
     val logger: Logger = LoggerFactory.getLogger(name),
 ) {
     /**
@@ -25,8 +28,6 @@ data class PluginContainer (
      * @param path The path to the resource.
      * @return The identifier for the resource.
      */
-    fun idOf(path: String): Identifier {
-        return Identifier(name, path)
-    }
+    fun idOf(path: String): Identifier = Identifier(name, path)
 }
 
