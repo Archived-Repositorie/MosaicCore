@@ -86,7 +86,5 @@ class ListenerBuilder(
  * @param block The DSL block
  * @receiver The plugin container
  */
-fun listener(plugin: PluginContainer, block: ListenerBuilder.() -> Unit) {
-    val builder = ListenerBuilder(plugin).apply(block)
-    builder.register()
-}
+fun listener(plugin: PluginContainer, block: ListenerBuilder.() -> Unit) = ListenerBuilder(plugin).apply(block).register()
+

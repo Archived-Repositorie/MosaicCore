@@ -15,5 +15,45 @@
  */
 package io.github.mosaicmc.mosaiccore.codecs
 
+import kotlin.reflect.full.createInstance
+
 class CodecBuilder {
+    inline fun <reified C : Codec<*>> field(name: String, noinline block: FieldBuilder<C>.(C) -> Unit) {
+        val codecInstance = C::class.createInstance()
+        FieldBuilder(name, codecInstance).apply {
+            block(this, codecInstance)
+        }
+    }
+}
+
+open class Codec<T>
+
+enum class CodecType {
+    STRING,
+    NUMBER,
+    LIST
+}
+
+interface Codecs {
+    class StringCodec : Codec<String>()
+
+    class NumberCodec : Codec<Number>()
+
+    class ListCodec<T> : Codec<List<T>>()
+}
+
+class FieldBuilder <C> (private val name: String, private val codecInstance: C) : Comparable<FieldBuilder<*>> {
+    var alias: Set<String> = setOf()
+
+    override fun compareTo(other: FieldBuilder<*>): Int {
+        return name.compareTo(other.name) + alias.contains(other.name).compareTo(false)
+    }
+}
+
+fun codecBuilder(block: CodecBuilder.() -> Unit) = CodecBuilder().apply(block)
+
+fun test() = codecBuilder {
+    field<Codecs.StringCodec>("name") {
+        alias = setOf("name", "name")
+    }
 }
