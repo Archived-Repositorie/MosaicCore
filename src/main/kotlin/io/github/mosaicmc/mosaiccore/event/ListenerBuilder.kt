@@ -13,7 +13,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-@file:Suppress("unused","deprecation")
+@file:Suppress("unused", "deprecation")
+
 package io.github.mosaicmc.mosaiccore.event
 
 import io.github.mosaicmc.mosaiccore.event.subscriber.SubscriberData
@@ -72,19 +73,21 @@ class ListenerBuilder(
      * Register is a function that registers all subscribers to the event handler.
      * Clears all the subscribers after registering.
      */
-    internal fun register() {
+    private fun register() {
         EventHandler.registerDSL(subs.toList())
         subs.clear()
     }
+
+    companion object {
+        /**
+         * Listener
+         *
+         * Listener is a DSL function that allows for easy event registration
+         * @param plugin The plugin container
+         * @param block The DSL block
+         * @receiver The plugin container
+         */
+        fun listener(plugin: PluginContainer, block: ListenerBuilder.() -> Unit) =
+            ListenerBuilder(plugin).apply(block).register()
+    }
 }
-
-/**
- * Listener
- *
- * Listener is a DSL function that allows for easy event registration
- * @param plugin The plugin container
- * @param block The DSL block
- * @receiver The plugin container
- */
-fun listener(plugin: PluginContainer, block: ListenerBuilder.() -> Unit) = ListenerBuilder(plugin).apply(block).register()
-

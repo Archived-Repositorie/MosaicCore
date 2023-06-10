@@ -26,7 +26,7 @@ import java.io.File
  * @property data The data
  * @property coderObject The coder object
  */
-data class ConfigKey<T>  (
+data class ConfigKey<T>(
     val file: File,
     val coderObject: T
 )

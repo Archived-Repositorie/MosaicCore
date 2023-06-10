@@ -34,7 +34,7 @@ class ConfigLoader<T>(private val dataCoder: DataCoder<T>) {
         configData: O,
         configDataModifier: ExtendedUpdater<O, T> = ExtendedUpdater { it.data }
     ): ExtendedConfigKey<O, T> {
-        val file = getConfigPath(plugin,fileName).toFile() /* gets file */
+        val file = getConfigPath(plugin, fileName).toFile() /* gets file */
         val dataObject = dataCoder.convertObject(configData) /* converts configData to dataObject */
         val data = loadOrWrite(file, dataObject) /* loads or writes dataObject to file */
         val configObject = dataCoder.convertToObject(data, configData.javaClass) /* converts data to configObject */
@@ -51,20 +51,20 @@ class ConfigLoader<T>(private val dataCoder: DataCoder<T>) {
         configData: T = dataCoder.default,
         configDataModifier: Updater<T> = Updater { it.coderObject }
     ): ConfigKey<T> {
-        val file = getConfigPath(plugin,fileName).toFile()
+        val file = getConfigPath(plugin, fileName).toFile()
         var data = loadOrWrite(file, configData)
 
-        data = configDataModifier.update(ConfigKey(file,data))
-        return ConfigKey(file,data)
+        data = configDataModifier.update(ConfigKey(file, data))
+        return ConfigKey(file, data)
     }
 
     fun <O : ConfigData> updateExtendedConfig(
-        key: ExtendedConfigKey<O,T>,
-        updater: ExtendedUpdater<O,T>
+        key: ExtendedConfigKey<O, T>,
+        updater: ExtendedUpdater<O, T>
     ): T {
-        val data = loadOrWrite(key.file,key.coderObject)
+        val data = loadOrWrite(key.file, key.coderObject)
         val objectData = dataCoder.convertToObject(data, key.data.javaClass)
-        val updatedData = updater.update(ExtendedConfigKey(key.file,objectData,data))
+        val updatedData = updater.update(ExtendedConfigKey(key.file, objectData, data))
         val updatedConfig = dataCoder.convertObject(updatedData)
 
         if (updatedConfig != data) {
@@ -77,8 +77,8 @@ class ConfigLoader<T>(private val dataCoder: DataCoder<T>) {
         key: ConfigKey<T>,
         updater: Updater<T>
     ): T {
-        val data = loadOrWrite(key.file,key.coderObject)
-        val updatedData = updater.update(ConfigKey(key.file,data))
+        val data = loadOrWrite(key.file, key.coderObject)
+        val updatedData = updater.update(ConfigKey(key.file, data))
         if (updatedData != data) {
             writeConfig(key.file, updatedData)
         }
@@ -114,7 +114,8 @@ class ConfigLoader<T>(private val dataCoder: DataCoder<T>) {
         }
     }
 
-    private fun getConfigPath(plugin: PluginContainer, fileName: String): Path = getConfigPath("${plugin.name}/$fileName.${dataCoder.extension}")
+    private fun getConfigPath(plugin: PluginContainer, fileName: String): Path =
+        getConfigPath("${plugin.name}/$fileName.${dataCoder.extension}")
 
     private fun getConfigPath(path: Path): Path = FabricLoader.getInstance().configDir.resolve(path)
 
@@ -124,8 +125,8 @@ class ConfigLoader<T>(private val dataCoder: DataCoder<T>) {
         fun update(data: ConfigKey<T>): T
     }
 
-    fun interface ExtendedUpdater<O : ConfigData,T> {
-        fun update(data: ExtendedConfigKey<O,T>): O
+    fun interface ExtendedUpdater<O : ConfigData, T> {
+        fun update(data: ExtendedConfigKey<O, T>): O
     }
 
     companion object {

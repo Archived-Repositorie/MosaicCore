@@ -27,7 +27,7 @@ import java.io.File
  * @property data The data
  * @property coderObject The coder object
  */
-data class ExtendedConfigKey<O,T>(
+data class ExtendedConfigKey<O, T>(
     val file: File,
     val data: O,
     val coderObject: T

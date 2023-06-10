@@ -14,6 +14,7 @@
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
 @file:Suppress("KDocMissingDocumentation", "UNUSED")
+
 package io.github.mosaicmc.mosaiccore.config.impl
 
 import com.google.gson.Gson

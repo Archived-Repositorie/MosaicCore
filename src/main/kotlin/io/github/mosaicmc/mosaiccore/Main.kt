@@ -18,7 +18,6 @@
 
 package io.github.mosaicmc.mosaiccore
 
-import io.github.mosaicmc.mosaiccore.codecs.test
 import io.github.mosaicmc.mosaiccore.plugin.PluginInitializer
 import net.fabricmc.loader.api.FabricLoader
 import org.slf4j.LoggerFactory
@@ -29,7 +28,6 @@ internal val plugins = FabricLoader.getInstance().getEntrypointContainers("plugi
 
 fun preInit() {
     logger.info("Welcome to mosaicmc!")
-    test()
 }
 
 

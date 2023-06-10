@@ -31,7 +31,7 @@ import org.slf4j.LoggerFactory
  * @property metadata The metadata of the plugin
  * @property logger The logger.
  */
-data class PluginContainer (
+data class PluginContainer(
     val modContainer: ModContainer,
     val server: MinecraftServer,
     val metadata: ModMetadata = modContainer.metadata,
