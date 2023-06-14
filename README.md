@@ -1,6 +1,6 @@
 # MosaicCore Documentation
 ## What is MosaicCore?
-MosaicCore is a loader/library designed as the core for MosaicMC, providing a foundation for implementing features. It can be seen as a plugin loader or an extended library for Fabric.
+MosaicCore is a core of framework designed as the core for MosaicMC, providing a foundation for implementing features. 
 ## Usage
 1. Add the Modrinth repository to your `build.gradle` file:
 ```groovy
