@@ -15,12 +15,12 @@
  */
 @file:Suppress("KDocMissingDocumentation", "UNUSED")
 
-package io.github.mosaicmc.mosaiccore.depracted.config
+package io.github.mosaicmc.mosaiccore.deprecated.config
 
 import com.google.gson.JsonObject
-import io.github.mosaicmc.mosaiccore.depracted.config.ConfigLoader.ExtendedUpdater
-import io.github.mosaicmc.mosaiccore.depracted.config.ConfigLoader.Updater
-import io.github.mosaicmc.mosaiccore.depracted.config.impl.SimpleJsonCoder
+import io.github.mosaicmc.mosaiccore.deprecated.config.ConfigLoader.ExtendedUpdater
+import io.github.mosaicmc.mosaiccore.deprecated.config.ConfigLoader.Updater
+import io.github.mosaicmc.mosaiccore.deprecated.config.impl.SimpleJsonCoder
 import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
 import net.fabricmc.loader.api.FabricLoader
 import java.io.File

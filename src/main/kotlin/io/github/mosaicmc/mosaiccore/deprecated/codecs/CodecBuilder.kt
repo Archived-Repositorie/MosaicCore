@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package io.github.mosaicmc.mosaiccore.depracted.codecs
+package io.github.mosaicmc.mosaiccore.deprecated.codecs
 @Deprecated("Gonna be moved into different library", level = DeprecationLevel.HIDDEN)
 fun deprecate() {}
 

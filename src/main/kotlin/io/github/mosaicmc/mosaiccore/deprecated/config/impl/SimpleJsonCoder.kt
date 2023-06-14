@@ -15,14 +15,14 @@
  */
 @file:Suppress("KDocMissingDocumentation", "UNUSED")
 
-package io.github.mosaicmc.mosaiccore.depracted.config.impl
+package io.github.mosaicmc.mosaiccore.deprecated.config.impl
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import io.github.mosaicmc.mosaiccore.depracted.config.ConfigData
-import io.github.mosaicmc.mosaiccore.depracted.config.JsonCoder
+import io.github.mosaicmc.mosaiccore.deprecated.config.ConfigData
+import io.github.mosaicmc.mosaiccore.deprecated.config.JsonCoder
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
