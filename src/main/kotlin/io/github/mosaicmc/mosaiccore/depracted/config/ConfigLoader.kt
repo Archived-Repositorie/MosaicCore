@@ -15,17 +15,18 @@
  */
 @file:Suppress("KDocMissingDocumentation", "UNUSED")
 
-package io.github.mosaicmc.mosaiccore.config
+package io.github.mosaicmc.mosaiccore.depracted.config
 
 import com.google.gson.JsonObject
-import io.github.mosaicmc.mosaiccore.config.ConfigLoader.ExtendedUpdater
-import io.github.mosaicmc.mosaiccore.config.ConfigLoader.Updater
-import io.github.mosaicmc.mosaiccore.config.impl.SimpleJsonCoder
-import io.github.mosaicmc.mosaiccore.plugin.PluginContainer
+import io.github.mosaicmc.mosaiccore.depracted.config.ConfigLoader.ExtendedUpdater
+import io.github.mosaicmc.mosaiccore.depracted.config.ConfigLoader.Updater
+import io.github.mosaicmc.mosaiccore.depracted.config.impl.SimpleJsonCoder
+import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
 import net.fabricmc.loader.api.FabricLoader
 import java.io.File
 import java.nio.file.Path
 
+@Deprecated("Gonna be moved into different library", level = DeprecationLevel.WARNING)
 class ConfigLoader<T>(private val dataCoder: DataCoder<T>) {
 
     fun <O : ConfigData> loadOrCreateConfig(

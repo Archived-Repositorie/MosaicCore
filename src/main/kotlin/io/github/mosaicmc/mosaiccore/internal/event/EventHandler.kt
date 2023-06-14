@@ -13,15 +13,19 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package io.github.mosaicmc.mosaiccore.event
 
+package io.github.mosaicmc.mosaiccore.internal.event
+
+import io.github.mosaicmc.mosaiccore.api.event.Event
 import kotlin.reflect.KClass
 
-/**
- * Event handler
- */
 object EventHandler {
     private val events: EventMap = HashMap()
+
+    internal fun <E : Event> getHandler(eventKClass: KClass<E>): Handler<E> {
+        @Suppress("UNCHECKED_CAST")
+        return events[checkForEvent(eventKClass)]!! as Handler<E>
+    }
 
     /**
      * Register DSL
@@ -30,20 +34,12 @@ object EventHandler {
      * @param list The list of subscriber objects
      */
     internal fun registerDSL(
-        list: List<Handler.SubscriberObject<out Event>>
+        list: List<SubscriberObject<out Event>>
     ) {
         list.forEach {
             registerSubscriber(it)
         }
     }
-
-    fun <E : Event> callEvent(event: E) {
-        (getHandler(event::class) as Handler<E>).forEach {
-            it.function.accept(event)
-        }
-    }
-
-    private fun <E : Event> registerSubscriber(sub: Handler.SubscriberObject<E>) = getHandler(sub.eventClass).add(sub)
 
     private fun <E : Event> checkForEvent(eventKClass: KClass<E>): KClass<E> {
         if (!events.containsKey(eventKClass)) {
@@ -52,10 +48,9 @@ object EventHandler {
         return eventKClass
     }
 
-    private fun <E : Event> getHandler(eventKClass: KClass<E>): Handler<E> {
-        @Suppress("UNCHECKED_CAST")
-        return events[checkForEvent(eventKClass)]!! as Handler<E>
-    }
+    private fun <E : Event> registerSubscriber(sub: SubscriberObject<E>) = getHandler(sub.eventClass).add(sub)
+
 }
 
 internal typealias EventMap = HashMap<KClass<out Event>, Handler<out Event>>
+

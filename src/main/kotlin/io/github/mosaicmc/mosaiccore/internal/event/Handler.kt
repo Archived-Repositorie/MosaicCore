@@ -13,25 +13,17 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package io.github.mosaicmc.mosaiccore.event
+package io.github.mosaicmc.mosaiccore.internal.event
 
-import io.github.mosaicmc.mosaiccore.event.subscriber.SubscriberData
-import io.github.mosaicmc.mosaiccore.plugin.PluginContainer
+import io.github.mosaicmc.mosaiccore.api.event.Event
+import io.github.mosaicmc.mosaiccore.api.event.Subscriber
+import io.github.mosaicmc.mosaiccore.api.event.SubscriberData
+import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
 import kotlin.reflect.KClass
 
-class Handler<E : Event>(
+internal class Handler<E : Event>(
     private val values: MutableList<SubscriberObject<E>> = mutableListOf()
 ) {
-    /**
-     * Remove
-     *
-     * Remove is a function that removes a subscriber from the handler
-     * @param key The subscriber object
-     */
-    fun remove(key: SubscriberObject<E>) {
-        values.remove(key)
-    }
-
     /**
      * Add
      *
@@ -44,7 +36,9 @@ class Handler<E : Event>(
     }
 
     fun forEach(action: (SubscriberObject<E>) -> Unit) {
-        values.forEach(action)
+        for (value in values) {
+            action(value)
+        }
     }
 
     private fun getSortedPlace(key: SubscriberObject<E>): Int {
@@ -60,35 +54,25 @@ class Handler<E : Event>(
         }
         return left
     }
+}
 
-    /**
-     * Subscriber object
-     *
-     * Subscriber object is a data class that holds the subscriber data and the subscriber function
-     * @param E
-     * @property eventClass The event class
-     * @property data The subscriber data
-     * @property function The subscriber function
-     * @property plugin The plugin container
-     */
-    data class SubscriberObject<E : Event>(
-        val eventClass: KClass<E>,
-        val data: SubscriberData,
-        val function: Subscriber<E>,
-        val plugin: PluginContainer
-    ) : Comparable<SubscriberObject<E>> {
-        override fun compareTo(other: SubscriberObject<E>): Int {
-            return data.priority.compareTo(other.data.priority)
-        }
-    }
-
-    /**
-     * Subscriber
-     *
-     * Subscriber is a functional interface that accepts an event object
-     * @param E The event type
-     */
-    fun interface Subscriber<E : Event> {
-        fun accept(event: E)
+/**
+ * Subscriber object
+ *
+ * Subscriber object is a data class that holds the subscriber data and the subscriber function
+ * @param E
+ * @property eventClass The event class
+ * @property data The subscriber data
+ * @property function The subscriber function
+ * @property plugin The plugin container
+ */
+data class SubscriberObject<E : Event>(
+    val eventClass: KClass<E>,
+    val data: SubscriberData,
+    val function: Subscriber<E>,
+    val plugin: PluginContainer
+) : Comparable<SubscriberObject<E>> {
+    override fun compareTo(other: SubscriberObject<E>): Int {
+        return data.priority.compareTo(other.data.priority)
     }
 }

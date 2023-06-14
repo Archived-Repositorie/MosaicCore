@@ -13,7 +13,9 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package io.github.mosaicmc.mosaiccore.plugin
+@file:Suppress("unused")
+
+package io.github.mosaicmc.mosaiccore.api.plugin
 
 import net.fabricmc.loader.api.ModContainer
 import net.fabricmc.loader.api.metadata.ModMetadata
@@ -43,6 +45,6 @@ data class PluginContainer(
      * @param path The path to the resource.
      * @return The identifier for the resource.
      */
-    fun idOf(path: String): Identifier = Identifier(name, path)
+    fun identifierOf(path: String): Identifier = Identifier(name, path)
 }
 

@@ -13,16 +13,24 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package io.github.mosaicmc.mosaiccore.plugin
+@file:Suppress("KDocMissingDocumentation", "UNUSED")
 
-/**
- * Interface for plugins to implement initialization code when loaded by the server.
- */
-fun interface PluginInitializer {
+package io.github.mosaicmc.mosaiccore.depracted.config
 
-    /**
-     * Called when the plugin is loaded by the server.
-     * @param plugin the container of the plugin
-     */
-    fun onLoad(plugin: PluginContainer)
+import java.io.File
+
+@Deprecated("Gonna be moved into different library", level = DeprecationLevel.WARNING)
+interface DataCoder<T> {
+    val extension: String
+    val default: T
+
+    fun <O : ConfigData> convertObject(data: O): T
+
+    fun <O : ConfigData> convertToObject(data: T, clazz: Class<O>): O
+
+    fun decodeFile(file: File): T
+
+    fun encodeToFile(data: T, file: File)
+
+    fun validateFile(file: File): Boolean = file.extension == extension
 }

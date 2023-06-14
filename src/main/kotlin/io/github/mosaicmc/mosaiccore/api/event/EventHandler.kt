@@ -13,14 +13,17 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package io.github.mosaicmc.mosaiccore.event.subscriber
+@file:Suppress("unused", "UNCHECKED_CAST")
 
-/**
- * Annotation used to mark methods to be used as event subscribers.
- * @property priority the priority of the subscriber, defaulting to [Priority.NORMAL].
- * @property ignoreCancelled whether events canceled should be ignored, defaulting to false.
- */
-annotation class SubscriberData(
-    val priority: Priority = Priority.NORMAL,
-    val ignoreCancelled: Boolean = false
-)
+
+package io.github.mosaicmc.mosaiccore.api.event
+
+import io.github.mosaicmc.mosaiccore.internal.event.EventHandler
+import io.github.mosaicmc.mosaiccore.internal.event.Handler
+
+fun <E : Event> EventHandler.callEvent(event: E) {
+    val handler = getHandler(event::class) as Handler<E>
+    handler.forEach {
+        it.function.accept(event)
+    }
+}

@@ -13,15 +13,20 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package io.github.mosaicmc.mosaiccore.event.additions
+package io.github.mosaicmc.mosaiccore.depracted.config
 
+import java.io.File
+@Deprecated("Gonna be moved into different library", level = DeprecationLevel.WARNING)
 /**
- * Represents an event that can be canceled.
+ * Config key
+ *
+ * Key which stores data about a config file.
+ * @param T Coder object
+ * @property file The file
+ * @property data The data
+ * @property coderObject The coder object
  */
-interface CancellableEvent {
-
-    /**
-     * Gets or sets whether this event is canceled.
-     */
-    var cancelled: Boolean
-}
+data class ConfigKey<T>(
+    val file: File,
+    val coderObject: T
+)

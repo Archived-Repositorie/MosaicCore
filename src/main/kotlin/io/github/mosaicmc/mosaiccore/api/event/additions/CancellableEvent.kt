@@ -13,10 +13,17 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package io.github.mosaicmc.mosaiccore.event
+@file:Suppress("unused")
+
+package io.github.mosaicmc.mosaiccore.api.event.additions
 
 /**
- * Event interface used for events.
- *
+ * Represents an event that can be canceled.
  */
-interface Event
+interface CancellableEvent {
+
+    /**
+     * Gets or sets whether this event is canceled.
+     */
+    var cancelled: Boolean
+}

@@ -13,11 +13,11 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package io.github.mosaicmc.mosaiccore.mixins
+package io.github.mosaicmc.mosaiccore.internal.mixins
 
-import io.github.mosaicmc.mosaiccore.logger
-import io.github.mosaicmc.mosaiccore.plugin.PluginContainer
-import io.github.mosaicmc.mosaiccore.plugins
+import io.github.mosaicmc.mosaiccore.internal.logger
+import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
+import io.github.mosaicmc.mosaiccore.internal.plugins
 import net.minecraft.server.MinecraftServer
 import org.spongepowered.asm.mixin.Mixin
 import org.spongepowered.asm.mixin.injection.At

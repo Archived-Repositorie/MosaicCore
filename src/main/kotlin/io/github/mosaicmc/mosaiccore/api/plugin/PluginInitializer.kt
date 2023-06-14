@@ -13,22 +13,16 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package io.github.mosaicmc.mosaiccore.config
-
-import java.io.File
+package io.github.mosaicmc.mosaiccore.api.plugin
 
 /**
- * Extended a config key
- *
- * Key which stores data about a config file.
- * @param O Config data
- * @param T Coder object
- * @property file The file
- * @property data The data
- * @property coderObject The coder object
+ * Interface for plugins to implement initialization code when loaded by the server.
  */
-data class ExtendedConfigKey<O, T>(
-    val file: File,
-    val data: O,
-    val coderObject: T
-) where O : ConfigData
+fun interface PluginInitializer {
+
+    /**
+     * Called when the plugin is loaded by the server.
+     * @param plugin the container of the plugin
+     */
+    fun onLoad(plugin: PluginContainer)
+}

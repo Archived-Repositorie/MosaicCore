@@ -13,8 +13,28 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package io.github.mosaicmc.mosaiccore.event.subscriber
+package io.github.mosaicmc.mosaiccore.api.event
 
+
+/**
+ * Subscriber
+ *
+ * Subscriber is a functional interface that accepts an event object
+ * @param E The event type
+ */
+fun interface Subscriber<E : Event> {
+    fun accept(event: E)
+}
+
+/**
+ * Annotation used to mark methods to be used as event subscribers.
+ * @property priority the priority of the subscriber, defaulting to [Priority.NORMAL].
+ * @property ignoreCancelled whether events canceled should be ignored, defaulting to false.
+ */
+annotation class SubscriberData(
+    val priority: Priority = Priority.NORMAL,
+    val ignoreCancelled: Boolean = false
+)
 
 /**
  * Priority

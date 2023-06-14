@@ -15,14 +15,14 @@
  */
 @file:Suppress("KDocMissingDocumentation", "UNUSED")
 
-package io.github.mosaicmc.mosaiccore.config.impl
+package io.github.mosaicmc.mosaiccore.depracted.config.impl
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.google.gson.JsonObject
 import com.google.gson.JsonParser
-import io.github.mosaicmc.mosaiccore.config.ConfigData
-import io.github.mosaicmc.mosaiccore.config.JsonCoder
+import io.github.mosaicmc.mosaiccore.depracted.config.ConfigData
+import io.github.mosaicmc.mosaiccore.depracted.config.JsonCoder
 import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
@@ -30,6 +30,7 @@ import java.io.FileWriter
 /**
  * A data converter that converts configuration data to and from JSON.
  */
+@Deprecated("Gonna be moved into different library", level = DeprecationLevel.WARNING)
 class SimpleJsonCoder : JsonCoder {
     override val default: JsonObject = JsonObject()
     override val extension: String = "json"

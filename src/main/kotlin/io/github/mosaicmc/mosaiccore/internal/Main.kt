@@ -13,20 +13,17 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package io.github.mosaicmc.mosaiccore.config
 
-import java.io.File
+@file:Suppress("unused")
 
-/**
- * Config key
- *
- * Key which stores data about a config file.
- * @param T Coder object
- * @property file The file
- * @property data The data
- * @property coderObject The coder object
- */
-data class ConfigKey<T>(
-    val file: File,
-    val coderObject: T
-)
+package io.github.mosaicmc.mosaiccore.internal
+
+import io.github.mosaicmc.mosaiccore.internal.logger
+
+fun preInit() = logger.info("Welcome to mosaicmc!")
+
+
+
+
+
+

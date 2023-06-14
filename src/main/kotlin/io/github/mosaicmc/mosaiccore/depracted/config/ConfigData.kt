@@ -13,23 +13,10 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-@file:Suppress("KDocMissingDocumentation", "UNUSED")
+package io.github.mosaicmc.mosaiccore.depracted.config
 
-package io.github.mosaicmc.mosaiccore.config
-
-import java.io.File
-
-interface DataCoder<T> {
-    val extension: String
-    val default: T
-
-    fun <O : ConfigData> convertObject(data: O): T
-
-    fun <O : ConfigData> convertToObject(data: T, clazz: Class<O>): O
-
-    fun decodeFile(file: File): T
-
-    fun encodeToFile(data: T, file: File)
-
-    fun validateFile(file: File): Boolean = file.extension == extension
-}
+@Deprecated("Gonna be moved into different library", level = DeprecationLevel.WARNING)
+/**
+ * Represents a config object.
+ */
+interface ConfigData
