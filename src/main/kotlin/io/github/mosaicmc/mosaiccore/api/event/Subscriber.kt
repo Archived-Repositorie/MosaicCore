@@ -15,11 +15,11 @@
  */
 package io.github.mosaicmc.mosaiccore.api.event
 
-
 /**
  * Subscriber
  *
  * Subscriber is a functional interface that accepts an event object
+ *
  * @param E The event type
  */
 fun interface Subscriber<E : Event> {
@@ -28,6 +28,7 @@ fun interface Subscriber<E : Event> {
 
 /**
  * Annotation used to mark methods to be used as event subscribers.
+ *
  * @property priority the priority of the subscriber, defaulting to [Priority.NORMAL].
  * @property ignoreCancelled whether events canceled should be ignored, defaulting to false.
  */
@@ -39,15 +40,15 @@ annotation class SubscriberData(
 /**
  * Priority
  *
- * Priority of an event subscriber.
- * If there are multiple subscribers for an event,
- * subscribers with higher priority are called before those with lower priority.
+ * Priority of an event subscriber. If there are multiple subscribers for an event, subscribers with
+ * higher priority are called before those with lower priority.
+ *
+ * @constructor Create empty Priority
  * @property HIGHEST
  * @property HIGH
  * @property NORMAL (default)
  * @property LOW
  * @property LOWEST
- * @constructor Create empty Priority
  */
 enum class Priority {
     HIGHEST,

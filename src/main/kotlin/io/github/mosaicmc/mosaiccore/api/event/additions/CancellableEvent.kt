@@ -17,13 +17,9 @@
 
 package io.github.mosaicmc.mosaiccore.api.event.additions
 
-/**
- * Represents an event that can be canceled.
- */
+/** Represents an event that can be canceled. */
 interface CancellableEvent {
 
-    /**
-     * Gets or sets whether this event is canceled.
-     */
+    /** Gets or sets whether this event is canceled. */
     var cancelled: Boolean
 }

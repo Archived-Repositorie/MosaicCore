@@ -2,6 +2,11 @@ plugins {
 	id 'fabric-loom' version '1.2-SNAPSHOT'
 	id 'maven-publish'
 	id 'org.jetbrains.kotlin.jvm'
+	id "com.ncorti.ktfmt.gradle" version '0.12.0'
+}
+
+ktfmt {
+	kotlinLangStyle()
 }
 
 loom {
@@ -52,6 +57,10 @@ jar {
 	from("LICENSE") {
 		rename { "${it}_${project.archivesBaseName}"}
 	}
+}
+
+ktfmt {
+	kotlinLangStyle()
 }
 
 compileKotlin.kotlinOptions.jvmTarget = "17"

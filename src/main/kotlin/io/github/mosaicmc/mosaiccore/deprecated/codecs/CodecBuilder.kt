@@ -17,16 +17,16 @@ package io.github.mosaicmc.mosaiccore.deprecated.codecs
 @Deprecated("Gonna be moved into different library", level = DeprecationLevel.HIDDEN)
 fun deprecate() {}
 
-//import com.google.gson.Gson
-//import com.google.gson.JsonElement
-//import com.google.gson.JsonObject
-//import com.google.gson.JsonParser
+// import com.google.gson.Gson
+// import com.google.gson.JsonElement
+// import com.google.gson.JsonObject
+// import com.google.gson.JsonParser
 //
 //
-//fun <T : Codec<*>> codecCreator(codec: T, block: T.() -> Unit): T = codec.apply(block)
+// fun <T : Codec<*>> codecCreator(codec: T, block: T.() -> Unit): T = codec.apply(block)
 //
-//@Suppress("UNCHECKED_CAST")
-//abstract class Codec<T : Any>(private val default: T) {
+// @Suppress("UNCHECKED_CAST")
+// abstract class Codec<T : Any>(private val default: T) {
 //    private var map: (T?) -> Any = { default }
 //    var nullable: Boolean = false
 //
@@ -49,9 +49,9 @@ fun deprecate() {}
 //    }
 //
 //    abstract fun validation(data: JsonElement)
-//}
+// }
 //
-//interface Codecs {
+// interface Codecs {
 //    class StringCodec(default: String = "") : Codec<String>(default) {
 //        override fun decode(data: JsonElement?): String? {
 //            return data?.asString
@@ -86,20 +86,20 @@ fun deprecate() {}
 //            fields.add(field)
 //        }
 //    }
-//}
+// }
 //
-//class Field<C : Codec<*>>(private val name: String, val codec: C) : Comparable<Field<*>> {
+// class Field<C : Codec<*>>(private val name: String, val codec: C) : Comparable<Field<*>> {
 //    var alias: Set<String> = setOf()
 //
 //    override fun compareTo(other: Field<*>): Int {
 //        return name.compareTo(other.name) + alias.contains(other.name).compareTo(false)
 //    }
-//}
+// }
 //
-//fun test() = codecCreator(Codecs.ObjectCodec()) {
+// fun test() = codecCreator(Codecs.ObjectCodec()) {
 //    field("test", Codecs.StringCodec()) {
 //        alias = setOf("test2")
 //        it.nullable = true
 //        it.map { i -> i!! }
 //    }
-//}
+// }

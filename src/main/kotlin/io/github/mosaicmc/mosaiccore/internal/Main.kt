@@ -18,12 +18,4 @@
 
 package io.github.mosaicmc.mosaiccore.internal
 
-import io.github.mosaicmc.mosaiccore.internal.logger
-
 fun preInit() = logger.info("Welcome to mosaicmc!")
-
-
-
-
-
-

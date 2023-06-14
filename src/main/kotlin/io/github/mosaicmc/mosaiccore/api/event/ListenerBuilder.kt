@@ -27,6 +27,7 @@ interface ListenerBuilder {
      * Subscriber
      *
      * Subscriber is a function that adds subscriber to listener
+     *
      * @param E The event class
      * @param eventClazz The event class
      * @param data The subscriber data
@@ -43,6 +44,7 @@ interface ListenerBuilder {
          * Listener
          *
          * Listener is a DSL function that allows for easy event registration
+         *
          * @param plugin The plugin container
          * @param block The DSL block
          * @receiver The plugin container
@@ -56,6 +58,7 @@ interface ListenerBuilder {
  * Subscriber
  *
  * Subscriber is a DSL function that add subscriber to listener
+ *
  * @param E The event class
  * @param data The subscriber data
  * @param function The subscriber function

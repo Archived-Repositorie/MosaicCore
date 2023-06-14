@@ -28,6 +28,7 @@ internal class Handler<E : Event>(
      * Add
      *
      * Add is a function that adds a subscriber to the handler
+     *
      * @param valueKey The subscriber object
      */
     fun add(valueKey: SubscriberObject<E>) {
@@ -60,6 +61,7 @@ internal class Handler<E : Event>(
  * Subscriber object
  *
  * Subscriber object is a data class that holds the subscriber data and the subscriber function
+ *
  * @param E
  * @property eventClass The event class
  * @property data The subscriber data

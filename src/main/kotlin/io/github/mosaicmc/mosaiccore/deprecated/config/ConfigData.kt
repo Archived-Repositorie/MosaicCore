@@ -16,7 +16,5 @@
 package io.github.mosaicmc.mosaiccore.deprecated.config
 
 @Deprecated("Gonna be moved into different library", level = DeprecationLevel.WARNING)
-/**
- * Represents a config object.
- */
+/** Represents a config object. */
 interface ConfigData

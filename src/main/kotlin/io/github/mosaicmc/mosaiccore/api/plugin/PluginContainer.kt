@@ -42,9 +42,9 @@ data class PluginContainer(
 ) {
     /**
      * Gets the identifier for a resource.
+     *
      * @param path The path to the resource.
      * @return The identifier for the resource.
      */
     fun identifierOf(path: String): Identifier = Identifier(name, path)
 }
-

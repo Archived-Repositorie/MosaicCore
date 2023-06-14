@@ -27,9 +27,7 @@ import java.io.File
 import java.io.FileReader
 import java.io.FileWriter
 
-/**
- * A data converter that converts configuration data to and from JSON.
- */
+/** A data converter that converts configuration data to and from JSON. */
 @Deprecated("Gonna be moved into different library", level = DeprecationLevel.WARNING)
 class SimpleJsonCoder : JsonCoder {
     override val default: JsonObject = JsonObject()
@@ -51,8 +49,6 @@ class SimpleJsonCoder : JsonCoder {
     }
 
     override fun encodeToFile(data: JsonObject, file: File) {
-        FileWriter(file).use { writer ->
-            gson.toJson(data, writer)
-        }
+        FileWriter(file).use { writer -> gson.toJson(data, writer) }
     }
 }

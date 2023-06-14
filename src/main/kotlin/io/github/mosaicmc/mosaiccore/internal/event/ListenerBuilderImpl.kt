@@ -26,24 +26,27 @@ internal typealias MutList = MutableList<SubscriberObject<out Event>>
  * Listener builder
  *
  * Listener builder is a class that holds all subscribers and registers them to the event handler
+ *
  * @property plugin The plugin container
  */
-class ListenerBuilderImpl(
-    private val plugin: PluginContainer
-) : ListenerBuilder {
+class ListenerBuilderImpl(private val plugin: PluginContainer) : ListenerBuilder {
     private val subs: MutList = mutableListOf()
 
     /**
      * Register
      *
-     * Register is a function that registers all subscribers to the event handler.
-     * Clears all the subscribers after registering.
+     * Register is a function that registers all subscribers to the event handler. Clears all the
+     * subscribers after registering.
      */
     internal fun register() {
         EventHandler.registerDSL(subs.toList())
         subs.clear()
     }
-    override fun <E : Event> subscriber(eventClazz: KClass<E>, data: SubscriberData, function: Subscriber<E>) {
+    override fun <E : Event> subscriber(
+        eventClazz: KClass<E>,
+        data: SubscriberData,
+        function: Subscriber<E>
+    ) {
         subs.add(SubscriberObject(eventClazz, data, function, plugin))
     }
 }

@@ -18,13 +18,13 @@
 package io.github.mosaicmc.mosaiccore.deprecated.config
 
 import com.google.gson.JsonObject
+import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
 import io.github.mosaicmc.mosaiccore.deprecated.config.ConfigLoader.ExtendedUpdater
 import io.github.mosaicmc.mosaiccore.deprecated.config.ConfigLoader.Updater
 import io.github.mosaicmc.mosaiccore.deprecated.config.impl.SimpleJsonCoder
-import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
-import net.fabricmc.loader.api.FabricLoader
 import java.io.File
 import java.nio.file.Path
+import net.fabricmc.loader.api.FabricLoader
 
 @Deprecated("Gonna be moved into different library", level = DeprecationLevel.WARNING)
 class ConfigLoader<T>(private val dataCoder: DataCoder<T>) {
@@ -38,10 +38,15 @@ class ConfigLoader<T>(private val dataCoder: DataCoder<T>) {
         val file = getConfigPath(plugin, fileName).toFile() /* gets file */
         val dataObject = dataCoder.convertObject(configData) /* converts configData to dataObject */
         val data = loadOrWrite(file, dataObject) /* loads or writes dataObject to file */
-        val configObject = dataCoder.convertToObject(data, configData.javaClass) /* converts data to configObject */
+        val configObject =
+            dataCoder.convertToObject(
+                data,
+                configData.javaClass
+            ) /* converts data to configObject */
         val key = ExtendedConfigKey(file, configObject, data) /* creates key */
         val modifiedConfig = configDataModifier.update(key) /* modifies config */
-        val modifiedData = dataCoder.convertObject(modifiedConfig) /* converts modified config to modified data */
+        val modifiedData =
+            dataCoder.convertObject(modifiedConfig) /* converts modified config to modified data */
 
         return ExtendedConfigKey(file, modifiedConfig, modifiedData) /* returns key */
     }
@@ -74,10 +79,7 @@ class ConfigLoader<T>(private val dataCoder: DataCoder<T>) {
         return updatedConfig
     }
 
-    fun updateConfig(
-        key: ConfigKey<T>,
-        updater: Updater<T>
-    ): T {
+    fun updateConfig(key: ConfigKey<T>, updater: Updater<T>): T {
         val data = loadOrWrite(key.file, key.coderObject)
         val updatedData = updater.update(ConfigKey(key.file, data))
         if (updatedData != data) {
@@ -86,10 +88,7 @@ class ConfigLoader<T>(private val dataCoder: DataCoder<T>) {
         return updatedData
     }
 
-    private fun loadOrWrite(
-        file: File,
-        toWrite: T = dataCoder.default
-    ): T {
+    private fun loadOrWrite(file: File, toWrite: T = dataCoder.default): T {
         return if (file.exists()) {
             loadConfig(file)
         } else {
@@ -131,9 +130,7 @@ class ConfigLoader<T>(private val dataCoder: DataCoder<T>) {
     }
 
     companion object {
-        /**
-         * A configuration loader that uses JSON as its data format.
-         */
+        /** A configuration loader that uses JSON as its data format. */
         val SIMPLE_JSON_CONFIG: ConfigLoader<JsonObject> = ConfigLoader(SimpleJsonCoder())
     }
 }

@@ -15,10 +15,7 @@
  */
 package io.github.mosaicmc.mosaiccore.api.event
 
-/**
- * Event interface used for events.
- *
- */
+/** Event interface used for events. */
 interface Event {
     companion object
 }

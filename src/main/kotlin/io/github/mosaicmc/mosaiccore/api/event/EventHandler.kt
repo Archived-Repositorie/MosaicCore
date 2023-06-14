@@ -15,7 +15,6 @@
  */
 @file:Suppress("unused", "UNCHECKED_CAST")
 
-
 package io.github.mosaicmc.mosaiccore.api.event
 
 import io.github.mosaicmc.mosaiccore.internal.event.EventHandler
@@ -23,7 +22,5 @@ import io.github.mosaicmc.mosaiccore.internal.event.Handler
 
 fun <E : Event> EventHandler.callEvent(event: E) {
     val handler = getHandler(event::class) as Handler<E>
-    handler.forEach {
-        it.function.accept(event)
-    }
+    handler.forEach { it.function.accept(event) }
 }

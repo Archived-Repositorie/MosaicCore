@@ -21,4 +21,5 @@ import net.fabricmc.loader.api.FabricLoader
 import org.slf4j.LoggerFactory
 
 internal val logger = LoggerFactory.getLogger("mosaicmc")
-internal val plugins = FabricLoader.getInstance().getEntrypointContainers("plugin", PluginInitializer::class.java)
+internal val plugins =
+    FabricLoader.getInstance().getEntrypointContainers("plugin", PluginInitializer::class.java)

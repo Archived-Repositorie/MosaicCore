@@ -23,22 +23,18 @@ object EventHandler {
     private val events: EventMap = HashMap()
 
     internal fun <E : Event> getHandler(eventKClass: KClass<E>): Handler<E> {
-        @Suppress("UNCHECKED_CAST")
-        return events[checkForEvent(eventKClass)]!! as Handler<E>
+        @Suppress("UNCHECKED_CAST") return events[checkForEvent(eventKClass)]!! as Handler<E>
     }
 
     /**
      * Register DSL
      *
      * Register DSL is a helper function that registers all subscribers to the event handler
+     *
      * @param list The list of subscriber objects
      */
-    internal fun registerDSL(
-        list: List<SubscriberObject<out Event>>
-    ) {
-        list.forEach {
-            registerSubscriber(it)
-        }
+    internal fun registerDSL(list: List<SubscriberObject<out Event>>) {
+        list.forEach { registerSubscriber(it) }
     }
 
     private fun <E : Event> checkForEvent(eventKClass: KClass<E>): KClass<E> {
@@ -48,9 +44,8 @@ object EventHandler {
         return eventKClass
     }
 
-    private fun <E : Event> registerSubscriber(sub: SubscriberObject<E>) = getHandler(sub.eventClass).add(sub)
-
+    private fun <E : Event> registerSubscriber(sub: SubscriberObject<E>) =
+        getHandler(sub.eventClass).add(sub)
 }
 
 internal typealias EventMap = HashMap<KClass<out Event>, Handler<out Event>>
-
