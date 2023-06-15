@@ -1,6 +1,6 @@
 # MosaicCore Documentation
 ## What is MosaicCore?
-MosaicCore is a core of framework designed as the core for MosaicMC, providing a foundation for implementing features. 
+MosaicCore is a core designed as the core for MosaicMC toolchain, providing a foundation for implementing features. 
 ## Usage
 1. Add the Modrinth repository to your `build.gradle` file:
 ```groovy
