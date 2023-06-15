@@ -19,8 +19,12 @@ package io.github.mosaicmc.mosaiccore.api.event
 
 import io.github.mosaicmc.mosaiccore.internal.event.EventHandler
 import io.github.mosaicmc.mosaiccore.internal.event.Handler
+import io.github.mosaicmc.mosaiccore.internal.logger
 
 fun <E : Event> EventHandler.callEvent(event: E) {
     val handler = getHandler(event::class) as Handler<E>
-    handler.forEach { it.function.accept(event) }
+    handler.forEach {
+        it.function.accept(event)
+        logger.debug("Handled event ${event::class.simpleName} by ${it.plugin.name}")
+    }
 }

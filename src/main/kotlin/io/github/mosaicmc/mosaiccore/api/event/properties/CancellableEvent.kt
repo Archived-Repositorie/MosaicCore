@@ -15,7 +15,7 @@
  */
 @file:Suppress("unused")
 
-package io.github.mosaicmc.mosaiccore.api.event.additions
+package io.github.mosaicmc.mosaiccore.api.event.properties
 
 /** Represents an event that can be canceled. */
 interface CancellableEvent {

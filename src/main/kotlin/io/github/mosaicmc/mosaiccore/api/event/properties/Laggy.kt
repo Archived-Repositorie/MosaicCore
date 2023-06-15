@@ -13,7 +13,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-package io.github.mosaicmc.mosaiccore.api.event.additions
+package io.github.mosaicmc.mosaiccore.api.event.properties
 
 /**
  * An annotation indicating that an event may cause performance issues due to lag.

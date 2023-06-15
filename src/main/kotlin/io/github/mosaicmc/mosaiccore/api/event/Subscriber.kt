@@ -13,12 +13,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+@file:Suppress("unused")
+
 package io.github.mosaicmc.mosaiccore.api.event
 
 /**
  * Subscriber
  *
- * Subscriber is a functional interface that accepts an event object
+ * Functional interface that represents an event subscriber.
  *
  * @param E The event type
  */
@@ -27,10 +29,11 @@ fun interface Subscriber<E : Event> {
 }
 
 /**
- * Annotation used to mark methods to be used as event subscribers.
+ * Annotation used to mark methods as event subscribers.
  *
- * @property priority the priority of the subscriber, defaulting to [Priority.NORMAL].
- * @property ignoreCancelled whether events canceled should be ignored, defaulting to false.
+ * @property priority The priority of the subscriber, defaults to [Priority.NORMAL].
+ * @property ignoreCancelled Determines whether canceled events should be ignored, defaults to
+ *   false.
  */
 annotation class SubscriberData(
     val priority: Priority = Priority.NORMAL,
@@ -40,15 +43,8 @@ annotation class SubscriberData(
 /**
  * Priority
  *
- * Priority of an event subscriber. If there are multiple subscribers for an event, subscribers with
- * higher priority are called before those with lower priority.
- *
- * @constructor Create empty Priority
- * @property HIGHEST
- * @property HIGH
- * @property NORMAL (default)
- * @property LOW
- * @property LOWEST
+ * Enum class representing the priority of an event subscriber. Subscribers with higher priority are
+ * invoked before those with lower priority.
  */
 enum class Priority {
     HIGHEST,

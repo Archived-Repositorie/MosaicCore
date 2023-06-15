@@ -43,17 +43,13 @@ internal class Handler<E : Event>(
     }
 
     private fun getSortedPlace(key: SubscriberObject<E>): Int {
-        var left = 0
-        var right = values.size - 1
-        while (left <= right) {
-            val mid = (left + right) / 2
-            when {
-                values[mid] == key -> return mid
-                values[mid] < key -> left = mid + 1
-                else -> right = mid - 1
+        return values.binarySearch(key).let { index ->
+            if (index >= 0) {
+                index // Key already exists in the array, return the index directly
+            } else {
+                -(index + 1) // Key doesn't exist, return the insertion point
             }
         }
-        return left
     }
 }
 
