@@ -39,19 +39,7 @@ interface Listener {
         function: (E) -> Unit
     )
 
-    companion object {
-        /**
-         * Listener
-         *
-         * Listener is a DSL function that allows for easy event registration
-         *
-         * @param plugin The plugin container
-         * @param block The DSL block
-         * @receiver The plugin container
-         */
-        fun listener(plugin: PluginContainer, block: Listener.() -> Unit) =
-            ListenerImpl(plugin).apply(block).register()
-    }
+    companion object
 }
 
 /**
@@ -69,3 +57,15 @@ inline fun <reified E : Event> Listener.subscriber(
 ) {
     subscriber(E::class, data, function)
 }
+
+/**
+ * Listener
+ *
+ * Listener is a DSL function that allows for easy event registration
+ *
+ * @param plugin The plugin container
+ * @param block The DSL block
+ * @receiver The plugin container
+ */
+fun Listener.Companion.listener(plugin: PluginContainer, block: Listener.() -> Unit) =
+    ListenerImpl(plugin).apply(block).register()

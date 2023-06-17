@@ -13,6 +13,8 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+@file:Suppress("CAST_NEVER_SUCCEEDS")
+
 package io.github.mosaicmc.mosaiccore.internal.mixins
 
 import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
