@@ -19,10 +19,10 @@
 package io.github.mosaicmc.mosaiccore.api.event
 
 import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
-import io.github.mosaicmc.mosaiccore.internal.event.ListenerBuilderImpl
+import io.github.mosaicmc.mosaiccore.internal.event.ListenerImpl
 import kotlin.reflect.KClass
 
-interface ListenerBuilder {
+interface Listener {
     /**
      * Subscriber
      *
@@ -36,7 +36,7 @@ interface ListenerBuilder {
     fun <E : Event> subscriber(
         eventClazz: KClass<E>,
         data: SubscriberData = SubscriberData(),
-        function: Subscriber<E>
+        function: (E) -> Unit
     )
 
     companion object {
@@ -49,8 +49,8 @@ interface ListenerBuilder {
          * @param block The DSL block
          * @receiver The plugin container
          */
-        fun listener(plugin: PluginContainer, block: ListenerBuilder.() -> Unit) =
-            ListenerBuilderImpl(plugin).apply(block).register()
+        fun listener(plugin: PluginContainer, block: Listener.() -> Unit) =
+            ListenerImpl(plugin).apply(block).register()
     }
 }
 
@@ -63,9 +63,9 @@ interface ListenerBuilder {
  * @param data The subscriber data
  * @param function The subscriber function
  */
-inline fun <reified E : Event> ListenerBuilder.subscriber(
+inline fun <reified E : Event> Listener.subscriber(
     data: SubscriberData = SubscriberData(),
-    function: Subscriber<E>
+    noinline function: (E) -> Unit
 ) {
     subscriber(E::class, data, function)
 }

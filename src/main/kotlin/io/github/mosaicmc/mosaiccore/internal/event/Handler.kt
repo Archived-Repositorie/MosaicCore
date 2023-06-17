@@ -16,14 +16,12 @@
 package io.github.mosaicmc.mosaiccore.internal.event
 
 import io.github.mosaicmc.mosaiccore.api.event.Event
-import io.github.mosaicmc.mosaiccore.api.event.Subscriber
 import io.github.mosaicmc.mosaiccore.api.event.SubscriberData
 import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
 import kotlin.reflect.KClass
 
-internal class Handler<E : Event>(
-    private val values: MutableList<SubscriberObject<E>> = mutableListOf()
-) {
+internal class Handler<E : Event> {
+    private val values: MutableList<Subscriber<E>> = mutableListOf()
     /**
      * Add
      *
@@ -31,18 +29,18 @@ internal class Handler<E : Event>(
      *
      * @param valueKey The subscriber object
      */
-    fun add(valueKey: SubscriberObject<E>) {
+    fun add(valueKey: Subscriber<E>) {
         val index = getSortedPlace(valueKey)
         values.add(index, valueKey)
     }
 
-    fun forEach(action: (SubscriberObject<E>) -> Unit) {
+    fun forEach(action: (Subscriber<E>) -> Unit) {
         for (value in values) {
             action(value)
         }
     }
 
-    private fun getSortedPlace(key: SubscriberObject<E>): Int {
+    private fun getSortedPlace(key: Subscriber<E>): Int {
         return values.binarySearch(key).let { index ->
             if (index >= 0) {
                 index // Key already exists in the array, return the index directly
@@ -64,13 +62,13 @@ internal class Handler<E : Event>(
  * @property function The subscriber function
  * @property plugin The plugin container
  */
-data class SubscriberObject<E : Event>(
+data class Subscriber<E : Event>(
     val eventClass: KClass<E>,
     val data: SubscriberData,
-    val function: Subscriber<E>,
+    val function: (E) -> Unit,
     val plugin: PluginContainer
-) : Comparable<SubscriberObject<E>> {
-    override fun compareTo(other: SubscriberObject<E>): Int {
+) : Comparable<Subscriber<E>> {
+    override fun compareTo(other: Subscriber<E>): Int {
         return data.priority.compareTo(other.data.priority)
     }
 }
