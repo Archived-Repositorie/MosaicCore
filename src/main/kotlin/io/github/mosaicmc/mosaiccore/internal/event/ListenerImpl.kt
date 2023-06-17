@@ -37,7 +37,7 @@ class ListenerImpl(private val plugin: PluginContainer) : Listener {
      * Register is a function that registers all subscribers to the event handler.
      */
     internal fun register() {
-        EventHandler.registerDSL(subs.toList())
+        EventHandler.registerDSL(subs)
     }
     override fun <E : Event> subscriber(
         eventClazz: KClass<E>,
