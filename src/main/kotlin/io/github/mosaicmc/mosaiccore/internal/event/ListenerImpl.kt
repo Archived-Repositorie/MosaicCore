@@ -20,7 +20,7 @@ import io.github.mosaicmc.mosaiccore.api.event.*
 import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
 import kotlin.reflect.KClass
 
-internal typealias MutList = MutableList<SubscriberObject<out Event>>
+internal typealias MutList = MutableList<Subscriber<out Event>>
 
 /**
  * Listener builder
@@ -29,24 +29,21 @@ internal typealias MutList = MutableList<SubscriberObject<out Event>>
  *
  * @property plugin The plugin container
  */
-class ListenerBuilderImpl(private val plugin: PluginContainer) : ListenerBuilder {
+class ListenerImpl(private val plugin: PluginContainer) : Listener {
     private val subs: MutList = mutableListOf()
-
     /**
      * Register
      *
-     * Register is a function that registers all subscribers to the event handler. Clears all the
-     * subscribers after registering.
+     * Register is a function that registers all subscribers to the event handler.
      */
     internal fun register() {
-        EventHandler.registerDSL(subs.toList())
-        subs.clear()
+        EventHandler.registerDSL(subs)
     }
     override fun <E : Event> subscriber(
         eventClazz: KClass<E>,
         data: SubscriberData,
-        function: Subscriber<E>
+        function: (E) -> Unit
     ) {
-        subs.add(SubscriberObject(eventClazz, data, function, plugin))
+        subs.add(Subscriber(eventClazz, data, function, plugin))
     }
 }

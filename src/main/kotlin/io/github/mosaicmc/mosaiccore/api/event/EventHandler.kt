@@ -13,18 +13,17 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-@file:Suppress("unused", "UNCHECKED_CAST")
+@file:Suppress("unused")
 
 package io.github.mosaicmc.mosaiccore.api.event
 
 import io.github.mosaicmc.mosaiccore.internal.event.EventHandler
-import io.github.mosaicmc.mosaiccore.internal.event.Handler
 import io.github.mosaicmc.mosaiccore.internal.logger
 
 fun <E : Event> EventHandler.callEvent(event: E) {
-    val handler = getHandler(event::class) as Handler<E>
+    val handler = getOrCreateHandler(event::class)
     handler.forEach {
-        it.function.accept(event)
+        it.function(event)
         logger.debug("Handled event ${event::class.simpleName} by ${it.plugin.name}")
     }
 }

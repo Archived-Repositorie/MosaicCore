@@ -18,4 +18,8 @@
 
 package io.github.mosaicmc.mosaiccore.internal
 
+import org.slf4j.LoggerFactory
+
+internal val logger = LoggerFactory.getLogger("mosaicmc")
+
 fun preInit() = logger.info("Welcome to mosaicmc!")

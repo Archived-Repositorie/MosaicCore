@@ -18,17 +18,6 @@
 package io.github.mosaicmc.mosaiccore.api.event
 
 /**
- * Subscriber
- *
- * Functional interface that represents an event subscriber.
- *
- * @param E The event type
- */
-fun interface Subscriber<E : Event> {
-    fun accept(event: E)
-}
-
-/**
  * Annotation used to mark methods as event subscribers.
  *
  * @property priority The priority of the subscriber, defaults to [Priority.NORMAL].

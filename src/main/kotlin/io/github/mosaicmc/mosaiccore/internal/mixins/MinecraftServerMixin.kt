@@ -13,11 +13,14 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+@file:Suppress("CAST_NEVER_SUCCEEDS")
+
 package io.github.mosaicmc.mosaiccore.internal.mixins
 
 import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
+import io.github.mosaicmc.mosaiccore.api.plugin.PluginInitializer
 import io.github.mosaicmc.mosaiccore.internal.logger
-import io.github.mosaicmc.mosaiccore.internal.plugins
+import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.server.MinecraftServer
 import org.spongepowered.asm.mixin.Mixin
 import org.spongepowered.asm.mixin.injection.At
@@ -32,6 +35,10 @@ class MinecraftServerMixin {
         method = ["runServer"]
     )
     private fun pluginLoader(info: CallbackInfo) {
+        val plugins =
+            FabricLoader.getInstance()
+                .getEntrypointContainers("plugin", PluginInitializer::class.java)
+
         for (plugin in plugins) {
             val entryPoint = plugin.entrypoint
             val modContainer = plugin.provider
