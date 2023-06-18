@@ -77,7 +77,7 @@ class TestEvent : Event, CancellableEvent {
     override var cancelled: Boolean = false
 }
 ```
-## Config system 
+## Config system (DEPRACTED)
 Mod contains a very flexible config system which can be used by any plugin. It gives the ability for developers to also add different types of data for config.
 ### Using config (JSON)
 Example of making config that uses default json data type.
