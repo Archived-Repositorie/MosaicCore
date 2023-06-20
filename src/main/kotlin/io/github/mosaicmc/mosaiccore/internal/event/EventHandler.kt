@@ -21,7 +21,6 @@ package io.github.mosaicmc.mosaiccore.internal.event
 import io.github.mosaicmc.mosaiccore.api.event.Event
 import kotlin.reflect.KClass
 
-
 object EventHandler {
     private val events: EventMap = HashMap()
 
