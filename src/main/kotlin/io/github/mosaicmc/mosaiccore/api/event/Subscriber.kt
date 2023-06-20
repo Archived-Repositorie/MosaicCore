@@ -18,27 +18,32 @@
 package io.github.mosaicmc.mosaiccore.api.event
 
 /**
- * Annotation used to mark methods as event subscribers.
+ * Data class for subscriber
  *
  * @property priority The priority of the subscriber, defaults to [Priority.NORMAL].
  * @property ignoreCancelled Determines whether canceled events should be ignored, defaults to
  *   false.
  */
-annotation class SubscriberData(
+data class SubscriberData(
     val priority: Priority = Priority.NORMAL,
     val ignoreCancelled: Boolean = false
 )
 
 /**
- * Priority
+ * Priority of a subscriber
  *
- * Enum class representing the priority of an event subscriber. Subscribers with higher priority are
- * invoked before those with lower priority.
+ * @property integer The integer value of the priority
  */
-enum class Priority {
-    HIGHEST,
-    HIGH,
-    NORMAL,
-    LOW,
-    LOWEST
+data class Priority(private val integer: Int) : Comparable<Priority> {
+    companion object {
+        val HIGHEST = Priority(Int.MAX_VALUE)
+        val HIGH = Priority(1)
+        val NORMAL = Priority(0)
+        val LOW = Priority(-1)
+        val LOWEST = Priority(Int.MIN_VALUE)
+    }
+
+    override fun compareTo(other: Priority): Int {
+        return integer.compareTo(other.integer)
+    }
 }
