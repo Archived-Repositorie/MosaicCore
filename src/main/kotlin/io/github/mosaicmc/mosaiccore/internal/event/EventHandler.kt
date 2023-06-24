@@ -40,12 +40,12 @@ object EventHandler {
  * @param subs The list of subscriber objects
  */
 internal fun EventHandler.registerAll(subs: List<Subscriber<*>>) {
-    for (sub in subs) {
-        register(sub)
-    }
+    for (sub in subs) register(sub)
 }
 
-internal fun <E : Event> EventHandler.register(sub: Subscriber<E>) =
-    getOrCreateHandler(sub.eventClass).add(sub)
+private fun <E : Event> EventHandler.register(sub: Subscriber<E>) {
+    val handler = getOrCreateHandler(sub.eventClass)
+    handler.add(sub)
+}
 
 internal typealias EventMap = HashMap<KClass<out Event>, Handler<out Event>>

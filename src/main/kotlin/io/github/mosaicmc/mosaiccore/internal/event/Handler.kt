@@ -22,26 +22,21 @@ import kotlin.reflect.KClass
 
 internal class Handler<E : Event> {
     private val values: MutableList<Subscriber<E>> = mutableListOf()
+
     /**
      * Add
      *
      * Add is a function that adds a subscriber to the handler
-     *
-     * @param valueKey The subscriber object
      */
-    fun add(valueKey: Subscriber<E>) {
-        val index = getSortedPlace(valueKey)
-        values.add(index, valueKey)
+    fun add(value: Subscriber<E>) {
+        val index = value.getSortedPlace()
+        values.add(index, value)
     }
 
-    fun forEach(action: (Subscriber<E>) -> Unit) {
-        for (value in values) {
-            action(value)
-        }
-    }
+    fun iterator(): Iterator<Subscriber<E>> = values.iterator()
 
-    private fun getSortedPlace(key: Subscriber<E>): Int {
-        return values.binarySearch(key).let { index ->
+    private fun Subscriber<E>.getSortedPlace(): Int {
+        return values.binarySearch(this).let { index ->
             if (index >= 0) {
                 index // Key already exists in the array, return the index directly
             } else {
