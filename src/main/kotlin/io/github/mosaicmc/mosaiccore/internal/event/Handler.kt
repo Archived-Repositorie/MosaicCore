@@ -60,7 +60,7 @@ internal class Handler<E : Event> {
 data class Subscriber<E : Event>(
     val eventClass: KClass<E>,
     val data: SubscriberData,
-    val function: (E) -> Unit,
+    val function: E.() -> Unit,
     val plugin: PluginContainer
 ) : Comparable<Subscriber<E>> {
     override fun compareTo(other: Subscriber<E>): Int {

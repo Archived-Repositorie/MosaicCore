@@ -42,7 +42,7 @@ class ListenerImpl(private val plugin: PluginContainer) : Listener {
     override fun <E : Event> subscriber(
         eventClazz: KClass<E>,
         data: SubscriberData,
-        function: (E) -> Unit
+        function: E.() -> Unit
     ) {
         subs.add(Subscriber(eventClazz, data, function, plugin))
     }

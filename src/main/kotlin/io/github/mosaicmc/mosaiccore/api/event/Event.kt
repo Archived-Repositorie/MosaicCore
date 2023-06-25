@@ -28,7 +28,7 @@ interface Event {
 fun <E : Event> E.call() {
     val handler = EventHandler.getOrCreateHandler(this::class)
     handler.iterator().forEach {
-        it.function(this)
+        this.apply(it.function)
         logger.debug("Handled event ${this::class.simpleName} by ${it.plugin.name}")
     }
 }
