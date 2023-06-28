@@ -13,9 +13,22 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+@file:Suppress("unused")
+
 package io.github.mosaicmc.mosaiccore.api.event
+
+import io.github.mosaicmc.mosaiccore.internal.event.EventHandler
+import io.github.mosaicmc.mosaiccore.internal.logger
 
 /** Event interface used for events. */
 interface Event {
     companion object
+}
+
+fun <E : Event> E.call() {
+    val handler = EventHandler.getOrCreateHandler(this::class)
+    handler.iterator().forEach {
+        this.apply(it.function)
+        logger.debug("Handled event ${this::class.simpleName} by ${it.plugin.name}")
+    }
 }

@@ -36,7 +36,7 @@ interface Listener {
     fun <E : Event> subscriber(
         eventClazz: KClass<E>,
         data: SubscriberData = SubscriberData(),
-        function: (E) -> Unit
+        function: E.() -> Unit
     )
 
     companion object
@@ -53,7 +53,7 @@ interface Listener {
  */
 inline fun <reified E : Event> Listener.subscriber(
     data: SubscriberData = SubscriberData(),
-    noinline function: (E) -> Unit
+    noinline function: E.() -> Unit
 ) {
     subscriber(E::class, data, function)
 }

@@ -24,28 +24,28 @@ import kotlin.reflect.KClass
 object EventHandler {
     private val events: EventMap = HashMap()
 
-    /**
-     * Register DSL
-     *
-     * Register DSL is a helper function that registers all subscribers to the event handler
-     *
-     * @param subs The list of subscriber objects
-     */
-    internal fun registerDSL(subs: List<Subscriber<out Event>>) {
-        for (sub in subs) {
-            registerSubscriber(sub)
-        }
-    }
-
     internal fun <E : Event> getOrCreateHandler(eventKClass: KClass<out E>): Handler<E> {
         if (events[eventKClass] == null) {
             events[eventKClass] = Handler()
         }
         return events[eventKClass] as Handler<E>
     }
+}
 
-    private fun <E : Event> registerSubscriber(sub: Subscriber<E>) =
-        getOrCreateHandler(sub.eventClass).add(sub)
+/**
+ * Register All
+ *
+ * Register all subscribers
+ *
+ * @param subs The list of subscriber objects
+ */
+internal fun EventHandler.registerAll(subs: List<Subscriber<*>>) {
+    for (sub in subs) register(sub)
+}
+
+private fun <E : Event> EventHandler.register(sub: Subscriber<E>) {
+    val handler = getOrCreateHandler(sub.eventClass)
+    handler.add(sub)
 }
 
 internal typealias EventMap = HashMap<KClass<out Event>, Handler<out Event>>
