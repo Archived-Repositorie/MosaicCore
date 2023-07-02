@@ -28,7 +28,8 @@ object EventHandler {
     internal fun <E : Event> EventHandler.getOrCreateHandler(
         eventKClass: KClass<out E>
     ): Handler<E> {
-        return events.putIfAbsent(eventKClass, Handler()) as Handler<E>
+        events.putIfAbsent(eventKClass, Handler())
+        return events[eventKClass] as Handler<E>
     }
 }
 
