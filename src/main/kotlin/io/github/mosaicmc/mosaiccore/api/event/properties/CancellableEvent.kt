@@ -17,13 +17,9 @@
 
 package io.github.mosaicmc.mosaiccore.api.event.properties
 
-import io.github.mosaicmc.mosaiccore.api.event.Event
-
 /** Represents an event that can be canceled. */
 interface CancellableEvent {
 
     /** Gets or sets whether this event is canceled. */
     var cancelled: Boolean
 }
-
-fun Event.isCancellable(): Boolean = this is CancellableEvent

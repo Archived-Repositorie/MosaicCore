@@ -39,10 +39,11 @@ class ListenerImpl(private val plugin: PluginContainer) : Listener {
     internal fun register() {
         EventHandler.registerAll(subs)
     }
+
     override fun <E : Event> subscriber(
         eventClazz: KClass<E>,
         data: SubscriberData,
-        function: E.() -> Unit
+        function: SubscriberFunction<E>
     ) {
         subs.add(Subscriber(eventClazz, data, function, plugin))
     }

@@ -17,6 +17,7 @@ package io.github.mosaicmc.mosaiccore.internal.event
 
 import io.github.mosaicmc.mosaiccore.api.event.Event
 import io.github.mosaicmc.mosaiccore.api.event.SubscriberData
+import io.github.mosaicmc.mosaiccore.api.event.SubscriberFunction
 import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
 import kotlin.reflect.KClass
 
@@ -60,7 +61,7 @@ internal class Handler<E : Event> {
 data class Subscriber<E : Event>(
     val eventClass: KClass<E>,
     val data: SubscriberData,
-    val function: E.() -> Unit,
+    val function: SubscriberFunction<E>,
     val plugin: PluginContainer
 ) : Comparable<Subscriber<E>> {
     override fun compareTo(other: Subscriber<E>): Int {

@@ -17,6 +17,8 @@
 
 package io.github.mosaicmc.mosaiccore.api.event
 
+import io.github.mosaicmc.mosaiccore.api.event.properties.CancellableEvent
+import io.github.mosaicmc.mosaiccore.api.plugin.name
 import io.github.mosaicmc.mosaiccore.internal.event.EventHandler
 import io.github.mosaicmc.mosaiccore.internal.logger
 
@@ -29,6 +31,8 @@ fun <E : Event> E.call() {
     val handler = EventHandler.getOrCreateHandler(this::class)
     handler.iterator().forEach {
         this.apply(it.function)
-        logger.debug("Handled event ${this::class.simpleName} by ${it.plugin.name}")
+        logger.debug("Handled event {} by {}", this::class.simpleName, it.plugin.name)
     }
 }
+
+fun Event.isCancellable(): Boolean = this is CancellableEvent

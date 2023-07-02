@@ -47,3 +47,5 @@ data class Priority(private val integer: Int) : Comparable<Priority> {
         return integer.compareTo(other.integer)
     }
 }
+
+typealias SubscriberFunction<E> = E.() -> Unit

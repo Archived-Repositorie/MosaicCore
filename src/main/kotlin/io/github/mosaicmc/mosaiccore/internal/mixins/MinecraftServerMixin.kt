@@ -19,6 +19,8 @@ package io.github.mosaicmc.mosaiccore.internal.mixins
 
 import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
 import io.github.mosaicmc.mosaiccore.api.plugin.PluginInitializer
+import io.github.mosaicmc.mosaiccore.api.plugin.metadata
+import io.github.mosaicmc.mosaiccore.api.plugin.name
 import io.github.mosaicmc.mosaiccore.internal.logger
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.server.MinecraftServer
