@@ -45,7 +45,7 @@ interface Listener {
 /**
  * Subscriber
  *
- * Subscriber is a DSL function that add subscriber to listener
+ * Subscriber is a DSL function that adds subscriber to listener
  *
  * @param E The event class
  * @param data The subscriber data
@@ -56,6 +56,24 @@ inline fun <reified E : Event> Listener.subscriber(
     noinline function: SubscriberFunction<E>
 ) {
     subscriber(E::class, data, function)
+}
+
+/**
+ * Subscriber
+ *
+ * Subscriber is a DSL function that adds subscriber to listener
+ *
+ * @param E The event class
+ * @param priority The priority
+ * @param cancellable The cancellable
+ * @param function The subscriber function
+ */
+inline fun <reified E : Event> Listener.subscriber(
+    priority: Priority = Priority.NORMAL,
+    cancellable: Boolean = false,
+    noinline function: SubscriberFunction<E>
+) {
+    subscriber(E::class, SubscriberData(priority, cancellable), function)
 }
 
 /**

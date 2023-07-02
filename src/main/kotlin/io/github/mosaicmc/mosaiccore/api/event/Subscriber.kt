@@ -21,8 +21,7 @@ package io.github.mosaicmc.mosaiccore.api.event
  * Data class for subscriber
  *
  * @property priority The priority of the subscriber, defaults to [Priority.NORMAL].
- * @property cancellable Determines whether canceled events should be ignored, defaults to
- *   false.
+ * @property cancellable Determines whether canceled events should be ignored, defaults to false.
  */
 data class SubscriberData(
     val priority: Priority = Priority.NORMAL,
