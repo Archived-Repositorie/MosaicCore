@@ -30,7 +30,7 @@ interface Event {
 fun <E : Event> E.call() {
     val handler = EventHandler.getOrCreateHandler(this::class)
     handler.iterator().forEach {
-        if ((this is CancellableEvent) && this.cancelled) {
+        if ((this is CancellableEvent) && this.cancelled && !it.data.cancellable) {
             return@forEach
         }
         this.apply(it.function)
