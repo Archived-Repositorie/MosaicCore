@@ -41,7 +41,7 @@ data class PluginContainer(
  * @param path The path to the resource.
  * @return The identifier for the resource.
  */
-fun PluginContainer.identifierOf(path: String): Identifier = Identifier(name, path)
+infix fun PluginContainer.identify(path: String): Identifier = Identifier(name, path)
 
 /**
  * Gets the metadata of the plugin.

@@ -20,6 +20,7 @@ package io.github.mosaicmc.mosaiccore.api.event
 import io.github.mosaicmc.mosaiccore.api.event.properties.CancellableEvent
 import io.github.mosaicmc.mosaiccore.api.plugin.name
 import io.github.mosaicmc.mosaiccore.internal.event.EventHandler
+import io.github.mosaicmc.mosaiccore.internal.event.EventHandler.getOrCreateHandler
 import io.github.mosaicmc.mosaiccore.internal.logger
 
 /** Event interface used for events. */

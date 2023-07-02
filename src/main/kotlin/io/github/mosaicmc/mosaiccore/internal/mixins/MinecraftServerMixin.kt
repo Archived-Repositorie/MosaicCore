@@ -41,15 +41,13 @@ class MinecraftServerMixin {
             FabricLoader.getInstance()
                 .getEntrypointContainers("plugin", PluginInitializer::class.java)
 
-        for (plugin in plugins) {
-            val entryPoint = plugin.entrypoint
-            val modContainer = plugin.provider
-            val server = this as MinecraftServer
-            val pluginContainer = PluginContainer(modContainer, server)
+        plugins.forEach { plugin ->
+            val (entryPoint, modContainer) = plugin.entrypoint to plugin.provider
+            val pluginContainer = PluginContainer(modContainer, this as MinecraftServer)
 
             entryPoint.onLoad(pluginContainer)
 
-            logger.info("loaded ${pluginContainer.name}:${pluginContainer.metadata.version}")
+            logger.info("Loaded ${pluginContainer.name}:${pluginContainer.metadata.version}")
         }
     }
 }

@@ -73,17 +73,16 @@ inline fun <reified E : Event> Listener.subscriber(
     cancellable: Boolean = false,
     noinline function: SubscriberFunction<E>
 ) {
-    subscriber(E::class, SubscriberData(priority, cancellable), function)
+    subscriber<E>(SubscriberData(priority, cancellable), function)
 }
 
 /**
  * Listener
  *
- * Listener is a DSL function that allows for easy event registration
+ * Listener is a DSL function that allows for easy event registration.
  *
- * @param plugin The plugin container
- * @param block The DSL block
- * @receiver The plugin container
+ * @param block The DSL block where event subscribers are defined.
+ * @receiver The plugin container to which the listeners will be associated.
  */
-fun Listener.Companion.listener(plugin: PluginContainer, block: Listener.() -> Unit) =
-    ListenerImpl(plugin).apply(block).register()
+infix fun PluginContainer.listen(block: Listener.() -> Unit) =
+    ListenerImpl(this).apply(block).register()
