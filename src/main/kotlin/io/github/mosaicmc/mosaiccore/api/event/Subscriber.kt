@@ -44,7 +44,7 @@ data class Priority(private val integer: Int) : Comparable<Priority> {
     }
 
     override fun compareTo(other: Priority): Int {
-        return integer.compareTo(other.integer)
+        return other.integer.compareTo(integer)
     }
 }
 

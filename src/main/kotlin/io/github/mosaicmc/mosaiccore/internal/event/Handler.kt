@@ -45,6 +45,8 @@ internal class Handler<E : Event> {
             }
         }
     }
+
+    override fun toString(): String = values.joinToString("\n")
 }
 
 /**
