@@ -36,7 +36,7 @@ class MinecraftServerMixin {
             [At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;setupServer()Z")],
         method = ["runServer"]
     )
-    private fun pluginLoader(info: CallbackInfo) {
+    private fun pluginLoader(unused: CallbackInfo) {
         val plugins =
             FabricLoader.getInstance()
                 .getEntrypointContainers("plugin", PluginInitializer::class.java)
