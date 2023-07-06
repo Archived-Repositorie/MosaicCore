@@ -17,33 +17,26 @@ package io.github.mosaicmc.mosaiccore.internal.event
 
 import io.github.mosaicmc.mosaiccore.api.event.Event
 import io.github.mosaicmc.mosaiccore.api.event.SubscriberData
+import io.github.mosaicmc.mosaiccore.api.event.SubscriberFunction
 import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
+import java.util.concurrent.ConcurrentSkipListSet
 import kotlin.reflect.KClass
 
 internal class Handler<E : Event> {
-    private val values: MutableList<Subscriber<E>> = mutableListOf()
+    private val values: ConcurrentSkipListSet<Subscriber<E>> = ConcurrentSkipListSet()
 
     /**
      * Add
      *
-     * Add is a function that adds a subscriber to the handler
+     * Add a subscriber to the handler
      */
     fun add(value: Subscriber<E>) {
-        val index = value.getSortedPlace()
-        values.add(index, value)
+        values.add(value)
     }
 
     fun iterator(): Iterator<Subscriber<E>> = values.iterator()
 
-    private fun Subscriber<E>.getSortedPlace(): Int {
-        return values.binarySearch(this).let { index ->
-            if (index >= 0) {
-                index // Key already exists in the array, return the index directly
-            } else {
-                -(index + 1) // Key doesn't exist, return the insertion point
-            }
-        }
-    }
+    override fun toString(): String = values.joinToString("\n")
 }
 
 /**
@@ -60,7 +53,7 @@ internal class Handler<E : Event> {
 data class Subscriber<E : Event>(
     val eventClass: KClass<E>,
     val data: SubscriberData,
-    val function: E.() -> Unit,
+    val function: SubscriberFunction<E>,
     val plugin: PluginContainer
 ) : Comparable<Subscriber<E>> {
     override fun compareTo(other: Subscriber<E>): Int {

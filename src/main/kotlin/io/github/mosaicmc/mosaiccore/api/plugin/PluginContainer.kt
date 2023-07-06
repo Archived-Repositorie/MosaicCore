@@ -28,17 +28,11 @@ import org.slf4j.LoggerFactory
  * Plugin represents a plugin.
  *
  * @property modContainer Represents the mod of the plugin
- * @property name The name of the plugin.
  * @property server The server.
- * @property metadata The metadata of the plugin
- * @property logger The logger.
  */
 data class PluginContainer(
     val modContainer: ModContainer,
     val server: MinecraftServer,
-    val metadata: ModMetadata = modContainer.metadata,
-    val name: String = metadata.id,
-    val logger: Logger = LoggerFactory.getLogger(name),
 )
 
 /**
@@ -47,4 +41,28 @@ data class PluginContainer(
  * @param path The path to the resource.
  * @return The identifier for the resource.
  */
-fun PluginContainer.identifierOf(path: String): Identifier = Identifier(name, path)
+infix fun PluginContainer.identify(path: String): Identifier = Identifier(name, path)
+
+/**
+ * Gets the metadata of the plugin.
+ *
+ * @return The metadata of the plugin
+ */
+val PluginContainer.metadata: ModMetadata
+    get() = this.modContainer.metadata
+
+/**
+ * Gets the logger of the plugin
+ *
+ * @return The logger
+ */
+val PluginContainer.logger: Logger
+    get() = LoggerFactory.getLogger(name)
+
+/**
+ * Gets the name of the plugin.
+ *
+ * @return The name of the plugin
+ */
+val PluginContainer.name: String
+    get() = metadata.id

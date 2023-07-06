@@ -19,6 +19,8 @@ package io.github.mosaicmc.mosaiccore.internal.mixins
 
 import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
 import io.github.mosaicmc.mosaiccore.api.plugin.PluginInitializer
+import io.github.mosaicmc.mosaiccore.api.plugin.metadata
+import io.github.mosaicmc.mosaiccore.api.plugin.name
 import io.github.mosaicmc.mosaiccore.internal.logger
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.server.MinecraftServer
@@ -34,20 +36,18 @@ class MinecraftServerMixin {
             [At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;setupServer()Z")],
         method = ["runServer"]
     )
-    private fun pluginLoader(info: CallbackInfo) {
+    private fun pluginLoader(unused: CallbackInfo) {
         val plugins =
             FabricLoader.getInstance()
                 .getEntrypointContainers("plugin", PluginInitializer::class.java)
 
-        for (plugin in plugins) {
-            val entryPoint = plugin.entrypoint
-            val modContainer = plugin.provider
-            val server = this as MinecraftServer
-            val pluginContainer = PluginContainer(modContainer, server)
+        plugins.forEach { plugin ->
+            val (entryPoint, modContainer) = plugin.entrypoint to plugin.provider
+            val pluginContainer = PluginContainer(modContainer, this as MinecraftServer)
 
             entryPoint.onLoad(pluginContainer)
 
-            logger.info("loaded ${pluginContainer.name}:${pluginContainer.metadata.version}")
+            logger.info("Loaded ${pluginContainer.name}:${pluginContainer.metadata.version}")
         }
     }
 }

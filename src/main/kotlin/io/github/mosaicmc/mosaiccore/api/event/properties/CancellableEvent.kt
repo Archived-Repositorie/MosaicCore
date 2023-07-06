@@ -13,11 +13,7 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-@file:Suppress("unused")
-
 package io.github.mosaicmc.mosaiccore.api.event.properties
-
-import io.github.mosaicmc.mosaiccore.api.event.Event
 
 /** Represents an event that can be canceled. */
 interface CancellableEvent {
@@ -25,5 +21,3 @@ interface CancellableEvent {
     /** Gets or sets whether this event is canceled. */
     var cancelled: Boolean
 }
-
-fun Event.isCancellable(): Boolean = this is CancellableEvent
