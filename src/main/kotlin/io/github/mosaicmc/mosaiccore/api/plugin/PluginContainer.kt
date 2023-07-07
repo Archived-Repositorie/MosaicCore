@@ -52,7 +52,7 @@ val PluginContainer.metadata: ModMetadata
     get() = this.modContainer.metadata
 
 /**
- * Gets the logger of the plugin
+ * Gets the (logger) of the plugin
  *
  * @return The logger
  */
