@@ -42,19 +42,19 @@ fun onLoad(plugin: PluginContainer) {
 The DSL Listener utilizes Kotlin's DSL feature, which allows for cleaner event handling compared to other event systems. Here's an example usage:
 Example usage: 
 ```kt
-fun test(plugin: PluginContainer) = listener(plugin) {
+fun test(plugin: PluginContainer) = plugin listen {
     subscriber<TestEvent>(SubscriberData(Priority.HIGHEST)) {
         plugin.logger.info("Test event called! 2")
     }
 }
 ```
 ### Custom event
-A custom event is a class to which subscribers can subscribe. Events can be cancellable by implementing the `Cancellable` interface and can be flagged as laggy by annotating `@Laggy`, which requires opting in and warns against its usage. Custom events can be triggered using `EventHandler.callEvent(TestEvent())`.
+A custom event is a class to which subscribers can subscribe. Events can be cancellable by implementing the `Cancellable` interface and can be flagged as laggy by annotating `@Laggy`, which requires opting in and warns against its usage. Custom events can be triggered using `TestEvent().call()`.
 <br>
 It is recommended to register events before plugin load to ensure they are registered before any subscribers. Here's an example of a simple event:
 ```kt
 fun test() {
-    EventHandler.callEvent(TestEvent())
+    TestEvent().call()
 }
 
 class TestEvent : Event
@@ -65,7 +65,7 @@ fun test() {
     @OptIn(Laggy::class) EventHandler.callEvent(TestEvent())
 }
 
-fun pluginInit(plugin: PluginContainer) = listener(plugin) {
+fun pluginInit(plugin: PluginContainer) = plugin listen {
     @OptIn(Laggy::class) 
     subscriber<TestEvent> {
         plugin.logger.info("Test event called! 2")
