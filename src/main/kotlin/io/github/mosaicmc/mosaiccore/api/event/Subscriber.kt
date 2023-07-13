@@ -21,12 +21,11 @@ package io.github.mosaicmc.mosaiccore.api.event
  * Data class for subscriber
  *
  * @property priority The priority of the subscriber, defaults to [Priority.NORMAL].
- * @property ignoreCancelled Determines whether canceled events should be ignored, defaults to
- *   false.
+ * @property cancellable Determines whether canceled events should be ignored, defaults to false.
  */
 data class SubscriberData(
     val priority: Priority = Priority.NORMAL,
-    val ignoreCancelled: Boolean = false
+    val cancellable: Boolean = false
 )
 
 /**
@@ -44,6 +43,8 @@ data class Priority(private val integer: Int) : Comparable<Priority> {
     }
 
     override fun compareTo(other: Priority): Int {
-        return integer.compareTo(other.integer)
+        return other.integer.compareTo(integer)
     }
 }
+
+typealias SubscriberFunction<E> = E.() -> Unit

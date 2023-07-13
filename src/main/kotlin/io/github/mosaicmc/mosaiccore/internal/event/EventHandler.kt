@@ -19,15 +19,16 @@
 package io.github.mosaicmc.mosaiccore.internal.event
 
 import io.github.mosaicmc.mosaiccore.api.event.Event
+import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass
 
 object EventHandler {
-    private val events: EventMap = HashMap()
+    private val events: TypeMap<Event, Handler<out Event>> = TypeMap()
 
-    internal fun <E : Event> getOrCreateHandler(eventKClass: KClass<out E>): Handler<E> {
-        if (events[eventKClass] == null) {
-            events[eventKClass] = Handler()
-        }
+    internal fun <E : Event> EventHandler.getOrCreateHandler(
+        eventKClass: KClass<out E>
+    ): Handler<E> {
+        events.putIfAbsent(eventKClass, Handler())
         return events[eventKClass] as Handler<E>
     }
 }
@@ -39,7 +40,7 @@ object EventHandler {
  *
  * @param subs The list of subscriber objects
  */
-internal fun EventHandler.registerAll(subs: List<Subscriber<*>>) {
+internal fun EventHandler.registerSubscribers(subs: List<Subscriber<*>>) {
     for (sub in subs) register(sub)
 }
 
@@ -48,4 +49,4 @@ private fun <E : Event> EventHandler.register(sub: Subscriber<E>) {
     handler.add(sub)
 }
 
-internal typealias EventMap = HashMap<KClass<out Event>, Handler<out Event>>
+internal typealias TypeMap<E, V> = ConcurrentHashMap<KClass<out E>, V>

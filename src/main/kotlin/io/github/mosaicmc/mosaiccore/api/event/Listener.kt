@@ -36,7 +36,7 @@ interface Listener {
     fun <E : Event> subscriber(
         eventClazz: KClass<E>,
         data: SubscriberData = SubscriberData(),
-        function: E.() -> Unit
+        function: SubscriberFunction<E>
     )
 
     companion object
@@ -45,7 +45,7 @@ interface Listener {
 /**
  * Subscriber
  *
- * Subscriber is a DSL function that add subscriber to listener
+ * Subscriber is a DSL function that adds subscriber to listener
  *
  * @param E The event class
  * @param data The subscriber data
@@ -53,19 +53,36 @@ interface Listener {
  */
 inline fun <reified E : Event> Listener.subscriber(
     data: SubscriberData = SubscriberData(),
-    noinline function: E.() -> Unit
+    noinline function: SubscriberFunction<E>
 ) {
     subscriber(E::class, data, function)
 }
 
 /**
+ * Subscriber
+ *
+ * Subscriber is a DSL function that adds subscriber to listener
+ *
+ * @param E The event class
+ * @param priority The priority
+ * @param cancellable The cancellable
+ * @param function The subscriber function
+ */
+inline fun <reified E : Event> Listener.subscriber(
+    priority: Priority = Priority.NORMAL,
+    cancellable: Boolean = false,
+    noinline function: SubscriberFunction<E>
+) {
+    subscriber<E>(SubscriberData(priority, cancellable), function)
+}
+
+/**
  * Listener
  *
- * Listener is a DSL function that allows for easy event registration
+ * Listener is a DSL function that allows for easy event registration.
  *
- * @param plugin The plugin container
- * @param block The DSL block
- * @receiver The plugin container
+ * @param block The DSL block where event subscribers are defined.
+ * @receiver The plugin container to which the listeners will be associated.
  */
-fun Listener.Companion.listener(plugin: PluginContainer, block: Listener.() -> Unit) =
-    ListenerImpl(plugin).apply(block).register()
+infix fun PluginContainer.listen(block: Listener.() -> Unit) =
+    ListenerImpl(this).apply(block).register()
