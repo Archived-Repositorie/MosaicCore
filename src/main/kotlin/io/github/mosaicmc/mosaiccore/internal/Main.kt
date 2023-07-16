@@ -18,10 +18,24 @@
 
 package io.github.mosaicmc.mosaiccore.internal
 
+import com.mojang.serialization.Codec
+import com.mojang.serialization.JsonOps
+import com.mojang.serialization.codecs.RecordCodecBuilder
 import org.slf4j.LoggerFactory
 
 internal val logger = LoggerFactory.getLogger("mosaicmc")
 
 fun preInit() {
-    logger.info("Welcome to mosaicmc!")
+    val codec =
+        RecordCodecBuilder.create {
+            it.group(
+                    Codec.STRING.optionalFieldOf("test", null).forGetter<TestCodec> { it1 ->
+                        it1.tester
+                    }
+                )
+                .apply(it, ::TestCodec)
+        }
+    codec.parse(JsonOps.INSTANCE, null)
 }
+
+data class TestCodec(val tester: String?)

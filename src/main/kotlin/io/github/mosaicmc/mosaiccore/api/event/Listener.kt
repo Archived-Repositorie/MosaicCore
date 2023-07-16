@@ -38,8 +38,6 @@ interface Listener {
         data: SubscriberData = SubscriberData(),
         function: SubscriberFunction<E>
     )
-
-    companion object
 }
 
 /**
