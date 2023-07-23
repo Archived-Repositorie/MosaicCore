@@ -1,3 +1,5 @@
+import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
+
 plugins {
     id("fabric-loom") version "1.3-SNAPSHOT"
     id("maven-publish")
@@ -52,6 +54,13 @@ tasks {
 
     withType<JavaCompile>().configureEach {
         options.release = 17
+    }
+
+    withType<KotlinCompile>().configureEach {
+        kotlinOptions.jvmTarget = "17"
+        kotlinOptions.freeCompilerArgs = listOf(
+            "-Xlambdas=indy"
+        )
     }
 }
 
