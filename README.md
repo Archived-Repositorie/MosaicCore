@@ -3,6 +3,7 @@
 MosaicCore is a core designed as the core for MosaicMC toolchain, providing a foundation for implementing features. 
 ## Usage
 1. Add the Modrinth repository to your `build.gradle` file:
+- Groovy
 ```groovy
 repositories {
     // ...
@@ -11,11 +12,17 @@ repositories {
     }
 }
 ```
+- Kotlin
+```kotlin
+repositories {
+    maven { url = uri("https://api.modrinth.com/maven") }
+}
+```
 2. Add the dependency to your `build.gradle` file, replacing `{version}` with the latest version found [here](https://modrinth.com/mod/mosaiccore/versions):
 ```groovy
 dependencies {
     // Adding and remapping a mod only in local runtime
-    modImplementation "maven.modrinth:mosaiccore:{version}"
+    implementation("maven.modrinth:mosaiccore:{version}")
 }
 ```
 ## Making plugin

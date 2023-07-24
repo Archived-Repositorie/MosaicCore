@@ -24,7 +24,12 @@ repositories {
 
 dependencies {
     minecraft("com.mojang:minecraft:${project.properties["minecraft_version"]}")
-    mappings("net.fabricmc:yarn:${project.properties["minecraft_version"]}+build.${project.properties["yarn_mappings"]}:v2")
+    @Suppress("UnstableApiUsage")
+    mappings(loom.layered {
+        officialMojangMappings()
+        parchment("org.parchmentmc.data:parchment-${project.properties["minecraft_version"]}:${project.properties["parchment_mappings"]}@zip")
+    })
+//    mappings("net.fabricmc:yarn:${project.properties["minecraft_version"]}+build.${project.properties["yarn_mappings"]}:v2")
     modImplementation("net.fabricmc:fabric-loader:${project.properties["loader_version"]}")
     modImplementation("net.fabricmc:fabric-language-kotlin:${project.properties["fabric_kotlin_version"]}+kotlin.${project.properties["kotlin_version"]}")
     testImplementation("net.fabricmc:fabric-loader-junit:${project.properties["loader_version"]}")

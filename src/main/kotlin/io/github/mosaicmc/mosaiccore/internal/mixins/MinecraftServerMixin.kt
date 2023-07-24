@@ -32,8 +32,7 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 @Mixin(MinecraftServer::class)
 class MinecraftServerMixin {
     @Inject(
-        at =
-            [At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;setupServer()Z")],
+        at = [At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;initServer()Z")],
         method = ["runServer"]
     )
     private fun pluginLoader(@Suppress("UNUSED_PARAMETER") unused: CallbackInfo) {
