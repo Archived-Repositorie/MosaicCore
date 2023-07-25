@@ -40,12 +40,9 @@ object EventHandler {
  *
  * @param subs The list of subscriber objects
  */
-internal fun EventHandler.registerAll(subs: List<Subscriber<*>>) {
-    for (sub in subs) register(sub)
-}
+internal fun EventHandler.registerAll(subs: List<Subscriber<*>>) = subs.forEach { register(it) }
 
-private fun <E : Event> EventHandler.register(sub: Subscriber<E>) {
+private fun <E : Event> EventHandler.register(sub: Subscriber<E>) =
     getOrCreateHandler(sub.eventClass).add(sub)
-}
 
 internal typealias TypeMap<E, V> = ConcurrentHashMap<KClass<out E>, V>
