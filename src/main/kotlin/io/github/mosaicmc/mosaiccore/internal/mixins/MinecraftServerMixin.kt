@@ -13,8 +13,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-@file:Suppress("CAST_NEVER_SUCCEEDS")
-
 package io.github.mosaicmc.mosaiccore.internal.mixins
 
 import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
@@ -43,6 +41,7 @@ class MinecraftServerMixin {
 
         plugins.forEach { plugin ->
             val (entryPoint, modContainer) = plugin.entrypoint to plugin.provider
+            @Suppress("CAST_NEVER_SUCCEEDS")
             val pluginContainer = PluginContainer(modContainer, this as MinecraftServer)
 
             entryPoint.onLoad(pluginContainer)
