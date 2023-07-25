@@ -20,6 +20,7 @@ group = project.properties["maven_group"].toString()
 
 repositories {
     maven { url = uri("https://jitpack.io") }
+    maven { url = uri("https://maven.parchmentmc.org")}
 }
 
 dependencies {
