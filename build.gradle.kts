@@ -35,7 +35,7 @@ dependencies {
     modImplementation("net.fabricmc:fabric-language-kotlin:${project.properties["fabric_kotlin_version"]}+kotlin.${project.properties["kotlin_version"]}")
     testImplementation("net.fabricmc:fabric-loader-junit:${project.properties["loader_version"]}")
 
-    val mixinExtras = "com.github.LlamaLad7:MixinExtras:${project.properties["mixin_extras"]}"
+    val mixinExtras = "com.github.llamalad7.mixinextras:mixinextras-fabric:${project.properties["mixin_extras"]}"
 
     include(implementation(annotationProcessor(mixinExtras)!!)!!)
 }
