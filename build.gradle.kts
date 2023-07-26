@@ -37,9 +37,7 @@ dependencies {
 
     val mixinExtras = "com.github.LlamaLad7:MixinExtras:${project.properties["mixin_extras"]}"
 
-    implementation(mixinExtras)
-    annotationProcessor(mixinExtras)
-    include(mixinExtras)
+    include(implementation(annotationProcessor(mixinExtras)!!)!!)
 }
 
 tasks {
