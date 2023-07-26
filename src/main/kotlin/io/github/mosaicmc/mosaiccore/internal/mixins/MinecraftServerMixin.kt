@@ -13,8 +13,6 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-@file:Suppress("CAST_NEVER_SUCCEEDS")
-
 package io.github.mosaicmc.mosaiccore.internal.mixins
 
 import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
@@ -32,9 +30,9 @@ import org.spongepowered.asm.mixin.injection.callback.CallbackInfo
 @Mixin(MinecraftServer::class)
 class MinecraftServerMixin {
     @Inject(
-        at =
-            [At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;setupServer()Z")],
-        method = ["runServer"]
+        at = [At(value = "INVOKE", target = "Lnet/minecraft/server/MinecraftServer;initServer()Z")],
+        method = ["runServer"],
+        remap = false
     )
     private fun pluginLoader(@Suppress("UNUSED_PARAMETER") unused: CallbackInfo) {
         val plugins =
@@ -43,6 +41,7 @@ class MinecraftServerMixin {
 
         plugins.forEach { plugin ->
             val (entryPoint, modContainer) = plugin.entrypoint to plugin.provider
+            @Suppress("CAST_NEVER_SUCCEEDS")
             val pluginContainer = PluginContainer(modContainer, this as MinecraftServer)
 
             entryPoint.onLoad(pluginContainer)

@@ -19,8 +19,8 @@ package io.github.mosaicmc.mosaiccore.api.plugin
 
 import net.fabricmc.loader.api.ModContainer
 import net.fabricmc.loader.api.metadata.ModMetadata
+import net.minecraft.resources.ResourceLocation
 import net.minecraft.server.MinecraftServer
-import net.minecraft.util.Identifier
 import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
@@ -36,12 +36,12 @@ data class PluginContainer(
 )
 
 /**
- * Gets the identifier for a resource.
+ * Gets the resource location.
  *
  * @param path The path to the resource.
- * @return The identifier for the resource.
+ * @return The resource location.
  */
-infix fun PluginContainer.identify(path: String): Identifier = Identifier(name, path)
+infix fun PluginContainer.resource(path: String): ResourceLocation = ResourceLocation(name, path)
 
 /**
  * Gets the metadata of the plugin.

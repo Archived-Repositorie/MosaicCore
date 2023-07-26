@@ -3,6 +3,7 @@
 MosaicCore is a core designed as the core for MosaicMC toolchain, providing a foundation for implementing features. 
 ## Usage
 1. Add the Modrinth repository to your `build.gradle` file:
+- Groovy
 ```groovy
 repositories {
     // ...
@@ -11,11 +12,25 @@ repositories {
     }
 }
 ```
+- Kotlin
+```kotlin
+repositories {
+    maven { url = uri("https://api.modrinth.com/maven") }
+}
+```
 2. Add the dependency to your `build.gradle` file, replacing `{version}` with the latest version found [here](https://modrinth.com/mod/mosaiccore/versions):
+- Groovy
 ```groovy
 dependencies {
     // Adding and remapping a mod only in local runtime
-    modImplementation "maven.modrinth:mosaiccore:{version}"
+    implementation "maven.modrinth:mosaiccore:{version}"
+}
+```
+- Kotlin
+```kt
+dependencies {
+    // Adding and remapping a mod only in local runtime
+    implementation("maven.modrinth:mosaiccore:{version}")
 }
 ```
 ## Making plugin
@@ -28,7 +43,7 @@ dependencies {
         "value": "plugin.entrypoint.PluginObject"
       }
     ]
-  },
+  }
 ```
 2. To create a plugin, you need to add an entrypoint called `plugin` to your `fabric.mod.json` file under the `Entrypoints` key. Replace `plugin.entrypoint.PluginObject` with the value that represents your function/class/object. For alternative methods, refer to the readme of [fabric-language-kotlin](https://github.com/FabricMC/fabric-language-kotlin#entrypoint-samples).
 ```kt

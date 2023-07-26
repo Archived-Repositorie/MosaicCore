@@ -18,10 +18,12 @@
 
 package io.github.mosaicmc.mosaiccore.internal
 
+import com.llamalad7.mixinextras.MixinExtrasBootstrap
 import org.slf4j.LoggerFactory
 
 internal val logger = LoggerFactory.getLogger("mosaicmc")
 
 fun preInit() {
+    MixinExtrasBootstrap.init()
     logger.info("Welcome to mosaiccore!")
 }
