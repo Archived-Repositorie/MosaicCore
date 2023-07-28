@@ -1,5 +1,3 @@
-@file:Suppress("CAST_NEVER_SUCCEEDS")
-
 package io.github.mosaicmc.mosaiccore.internal
 
 import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
@@ -10,19 +8,14 @@ import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.server.MinecraftServer
 
 object CoreEvent {
-    internal fun pluginLoader() {
-        val plugins =
-            FabricLoader.getInstance()
-                .getEntrypointContainers("plugin", PluginInitializer::class.java)
-
-        plugins.forEach {
-            val entryPoint = it.entrypoint
-            val modContainer = it.provider
-            val pluginContainer = PluginContainer(modContainer, (this as MinecraftServer))
-
-            entryPoint.onLoad(pluginContainer)
-
-            logger.info("Loaded " + pluginContainer.name + ":" + pluginContainer.metadata.version)
-        }
-    }
+    internal fun pluginLoader(server: MinecraftServer) =
+        FabricLoader.getInstance()
+            .getEntrypointContainers("plugin", PluginInitializer::class.java)
+            .stream()
+            .map {
+                val pluginContainer = PluginContainer(it.provider, server)
+                it.entrypoint.onLoad(pluginContainer)
+                pluginContainer.name to pluginContainer.metadata.version
+            }
+            .forEach { (name, version) -> logger.info("Loaded $name:$version") }
 }

@@ -14,6 +14,6 @@ public class MinecraftServerMixin {
             method = "runServer"
     )
     private void pluginLoader(CallbackInfo $unused$) {
-        CoreEvent.INSTANCE.pluginLoader$MosaicCore();
+        CoreEvent.INSTANCE.pluginLoader$MosaicCore((MinecraftServer)(Object)this);
     }
 }
