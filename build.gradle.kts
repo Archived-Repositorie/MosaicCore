@@ -50,8 +50,14 @@ tasks {
     processResources {
         expand(project.properties)
     }
+
     getByName("build") {
         dependsOn("dokkaHtmlJar")
+        dependsOn("dokkaJavadocJar")
+    }
+
+    getByName("javadoc") {
+        dependsOn("dokkaJavadocJar")
     }
 
     jar {
@@ -71,15 +77,19 @@ tasks {
 
     withType<KotlinCompile>().configureEach {
         kotlinOptions.jvmTarget = "17"
-        kotlinOptions.freeCompilerArgs = listOf(
-            "-Xlambdas=indy"
-        )
+        kotlinOptions.freeCompilerArgs += "-Xlambdas=indy"
     }
 
     register<Jar>("dokkaHtmlJar") {
         dependsOn(dokkaHtml)
         from(dokkaHtml.flatMap { it.outputDirectory })
-        archiveClassifier.set("html-docs")
+        archiveClassifier = "html-docs"
+    }
+
+    register<Jar>("dokkaJavadocJar") {
+        dependsOn(dokkaJavadoc)
+        from(dokkaHtml.flatMap { it.outputDirectory })
+        archiveClassifier = "javadoc"
     }
 }
 
@@ -90,8 +100,3 @@ java {
 ktfmt {
     kotlinLangStyle()
 }
-
-
-
-
-
