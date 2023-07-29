@@ -7,6 +7,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm")
     id("com.ncorti.ktfmt.gradle") version "0.12.0"
     id("io.github.juuxel.loom-vineflower") version "1.11.0"
+    id("org.jetbrains.dokka") version "1.8.20"
 }
 
 loom {
@@ -49,6 +50,9 @@ tasks {
     processResources {
         expand(project.properties)
     }
+    getByName("build") {
+        dependsOn("dokkaHtmlJar")
+    }
 
     jar {
         from("LICENSE") {
@@ -72,6 +76,11 @@ tasks {
         )
     }
 
+    register<Jar>("dokkaHtmlJar") {
+        dependsOn(dokkaHtml)
+        from(dokkaHtml.flatMap { it.outputDirectory })
+        archiveClassifier.set("html-docs")
+    }
 }
 
 java {
@@ -81,5 +90,8 @@ java {
 ktfmt {
     kotlinLangStyle()
 }
+
+
+
 
 

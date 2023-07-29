@@ -2,7 +2,6 @@ package io.github.mosaicmc.mosaiccore.internal
 
 import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
 import io.github.mosaicmc.mosaiccore.api.plugin.PluginInitializer
-import jdk.tools.jlink.resources.plugins
 import net.fabricmc.loader.api.FabricLoader
 import net.minecraft.server.MinecraftServer
 
