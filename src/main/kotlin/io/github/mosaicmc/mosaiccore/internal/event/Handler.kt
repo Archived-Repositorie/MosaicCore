@@ -22,31 +22,49 @@ import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
 import java.util.concurrent.ConcurrentSkipListSet
 import kotlin.reflect.KClass
 
+/**
+ * Handler class
+ *
+ * This internal class is responsible for managing event subscribers of type [E].
+ *
+ * @param E The type of event that this handler manages.
+ */
 internal class Handler<E : Event> {
     private val values: ConcurrentSkipListSet<Subscriber<E>> = ConcurrentSkipListSet()
 
     /**
-     * Add
+     * Add a subscriber to the handler.
      *
-     * Add a subscriber to the handler
+     * @param value The subscriber to be added.
      */
     fun add(value: Subscriber<E>) = values.add(value)
 
+    /**
+     * Get an iterator to traverse through the subscribers.
+     *
+     * @return An iterator over the subscribers in this handler.
+     */
     fun iterator(): Iterator<Subscriber<E>> = values.iterator()
 
+    /**
+     * Convert the handler to a human-readable string representation.
+     *
+     * @return A string representation of the handler, listing all the subscribers.
+     */
     override fun toString(): String = values.joinToString("\n")
 }
 
 /**
- * Subscriber object
+ * Subscriber data class
  *
- * Subscriber object is a data class that holds the subscriber data and the subscriber function
+ * This data class represents a subscriber that listens to events of type [E].
  *
- * @param E
- * @property eventClass The event class
- * @property data The subscriber data
- * @property function The subscriber function
- * @property plugin The plugin container
+ * @param E The type of event that this subscriber listens to.
+ * @property eventClass The event class that this subscriber listens to.
+ * @property data The subscriber data, such as name, description, or any other relevant information.
+ * @property function The subscriber function that will be invoked when the corresponding event
+ *   occurs.
+ * @property plugin The plugin container associated with this subscriber.
  */
 data class Subscriber<E : Event>(
     val eventClass: KClass<E>,
@@ -54,5 +72,13 @@ data class Subscriber<E : Event>(
     val function: SubscriberFunction<E>,
     val plugin: PluginContainer
 ) : Comparable<Subscriber<E>> {
+    /**
+     * Compare this subscriber to another subscriber based on their priority. This is required to
+     * sort subscribers in a meaningful order.
+     *
+     * @param other The other subscriber to compare to.
+     * @return A negative integer if this subscriber has lower priority, zero if they have the same
+     *   priority, and a positive integer if this subscriber has higher priority.
+     */
     override fun compareTo(other: Subscriber<E>): Int = data.priority.compareTo(other.data.priority)
 }

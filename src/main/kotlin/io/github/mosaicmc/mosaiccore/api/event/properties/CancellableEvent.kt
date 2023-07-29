@@ -15,7 +15,13 @@
  */
 package io.github.mosaicmc.mosaiccore.api.event.properties
 
-/** Represents an event that can be canceled. */
+/**
+ * CancellableEvent interface
+ *
+ * The `CancellableEvent` interface represents an event that can be canceled. Events implementing
+ * this interface can have a `cancelled` property, indicating whether the event has been canceled or
+ * not.
+ */
 interface CancellableEvent {
 
     /** Gets or sets whether this event is canceled. */

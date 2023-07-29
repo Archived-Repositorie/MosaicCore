@@ -22,12 +22,26 @@ import io.github.mosaicmc.mosaiccore.api.event.Event
 import java.util.concurrent.ConcurrentHashMap
 import kotlin.reflect.KClass
 
+/**
+ * EventHandler object
+ *
+ * The `EventHandler` object manages event handlers for different event types. It allows to register
+ * subscribers for various events and handles the dispatching of events to the appropriate
+ * subscribers.
+ */
 object EventHandler {
     private val events: TypeMap<Event, Handler<out Event>> = TypeMap()
 
-    internal fun <E : Event> EventHandler.getOrCreateHandler(
-        eventKClass: KClass<out E>
-    ): Handler<E> =
+    /**
+     * Get or create the event handler for a specific event type.
+     *
+     * If an event handler for the given event type already exists, it is returned. Otherwise, a new
+     * event handler is created and associated with the event type.
+     *
+     * @param eventKClass The Kotlin class representing the event type.
+     * @return The event handler for the specified event type.
+     */
+    internal fun <E : Event> getOrCreateHandler(eventKClass: KClass<out E>): Handler<E> =
         events.getOrDefault(eventKClass, Handler<E>().also { events[eventKClass] = it })
             as Handler<E>
 }
@@ -35,13 +49,23 @@ object EventHandler {
 /**
  * Register All
  *
- * Register all subscribers
+ * Register all subscribers for their corresponding event types.
  *
- * @param subs The list of subscriber objects
+ * @param subs The list of subscriber objects to register.
  */
 internal fun EventHandler.registerAll(subs: List<Subscriber<*>>) = subs.forEach { register(it) }
 
+/**
+ * Register a subscriber for its corresponding event type.
+ *
+ * @param sub The subscriber object to register.
+ */
 private fun <E : Event> EventHandler.register(sub: Subscriber<E>) =
     getOrCreateHandler(sub.eventClass).add(sub)
 
+/**
+ * TypeMap typealias
+ *
+ * A thread-safe map that associates event types (`E`) with their corresponding values (`V`).
+ */
 internal typealias TypeMap<E, V> = ConcurrentHashMap<KClass<out E>, V>

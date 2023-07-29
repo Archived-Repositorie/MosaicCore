@@ -18,6 +18,7 @@ package io.github.mosaicmc.mosaiccore.internal.event
 
 import io.github.mosaicmc.mosaiccore.api.event.*
 import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
+import io.github.mosaicmc.mosaiccore.internal.unit
 import kotlin.reflect.KClass
 
 internal typealias MutList = MutableList<Subscriber<out Event>>
@@ -42,7 +43,5 @@ class ListenerImpl(private val plugin: PluginContainer) : Listener {
         eventClazz: KClass<E>,
         data: SubscriberData,
         function: SubscriberFunction<E>
-    ) {
-        subs.add(Subscriber(eventClazz, data, function, plugin))
-    }
+    ) = subs.add(Subscriber(eventClazz, data, function, plugin)).unit
 }

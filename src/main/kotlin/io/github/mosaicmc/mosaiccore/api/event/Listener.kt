@@ -22,16 +22,22 @@ import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
 import io.github.mosaicmc.mosaiccore.internal.event.ListenerImpl
 import kotlin.reflect.KClass
 
+/**
+ * Listener interface
+ *
+ * The `Listener` interface allows adding subscribers to listen for specific event types.
+ */
 interface Listener {
     /**
-     * Subscriber
+     * Subscriber function
      *
-     * Subscriber is a function that adds subscriber to listener
+     * A function that adds a subscriber to the listener to listen for events of type [E].
      *
-     * @param E The event class
-     * @param eventClazz The event class
-     * @param data The subscriber data
-     * @param function The subscriber function
+     * @param E The event class that the subscriber will listen to.
+     * @param eventClazz The event class representing the type of event that the subscriber listens
+     *   to.
+     * @param data The subscriber data, which includes priority and cancellable settings (optional).
+     * @param function The subscriber function, a lambda expression to handle the event.
      */
     fun <E : Event> subscriber(
         eventClazz: KClass<E>,
@@ -41,13 +47,13 @@ interface Listener {
 }
 
 /**
- * Subscriber
+ * DSL subscriber function
  *
- * Subscriber is a DSL function that adds subscriber to listener
+ * This DSL function allows adding a subscriber to listen for events of type [E].
  *
- * @param E The event class
- * @param data The subscriber data
- * @param function The subscriber function
+ * @param E The event class that the subscriber will listen to.
+ * @param data The subscriber data, which includes priority and cancellable settings (optional).
+ * @param function The subscriber function, a lambda expression to handle the event.
  */
 inline fun <reified E : Event> Listener.subscriber(
     data: SubscriberData = SubscriberData(),
@@ -55,14 +61,15 @@ inline fun <reified E : Event> Listener.subscriber(
 ) = subscriber(E::class, data, function)
 
 /**
- * Subscriber
+ * DSL subscriber function with priority and cancellable settings
  *
- * Subscriber is a DSL function that adds subscriber to listener
+ * This DSL function allows adding a subscriber to listen for events of type [E] with specific
+ * priority and cancellable settings.
  *
- * @param E The event class
- * @param priority The priority
- * @param cancellable The cancellable
- * @param function The subscriber function
+ * @param E The event class that the subscriber will listen to.
+ * @param priority The priority of the subscriber.
+ * @param cancellable Determines whether canceled events should be ignored by the subscriber.
+ * @param function The subscriber function, a lambda expression to handle the event.
  */
 inline fun <reified E : Event> Listener.subscriber(
     priority: Priority = Priority.NORMAL,
@@ -71,9 +78,9 @@ inline fun <reified E : Event> Listener.subscriber(
 ) = subscriber<E>(SubscriberData(priority, cancellable), function)
 
 /**
- * Listener
+ * Listener DSL function
  *
- * Listener is a DSL function that allows for easy event registration.
+ * This DSL function provides a convenient way to register multiple event subscribers.
  *
  * @param block The DSL block where event subscribers are defined.
  * @receiver The plugin container to which the listeners will be associated.
