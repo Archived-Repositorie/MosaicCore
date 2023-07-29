@@ -1,5 +1,4 @@
 import juuxel.vineflowerforloom.api.DecompilerBrand
-import net.fabricmc.loom.configuration.providers.minecraft.MinecraftJarConfiguration
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -15,9 +14,6 @@ loom {
 }
 vineflower {
     brand.set(DecompilerBrand.VINEFLOWER)
-    preferences {
-
-    }
 }
 
 val sourceCompatibility = JavaVersion.VERSION_17

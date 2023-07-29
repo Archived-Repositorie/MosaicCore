@@ -30,9 +30,7 @@ internal class Handler<E : Event> {
      *
      * Add a subscriber to the handler
      */
-    fun add(value: Subscriber<E>) {
-        values.add(value)
-    }
+    fun add(value: Subscriber<E>) = values.add(value)
 
     fun iterator(): Iterator<Subscriber<E>> = values.iterator()
 
@@ -56,7 +54,5 @@ data class Subscriber<E : Event>(
     val function: SubscriberFunction<E>,
     val plugin: PluginContainer
 ) : Comparable<Subscriber<E>> {
-    override fun compareTo(other: Subscriber<E>): Int {
-        return data.priority.compareTo(other.data.priority)
-    }
+    override fun compareTo(other: Subscriber<E>): Int = data.priority.compareTo(other.data.priority)
 }

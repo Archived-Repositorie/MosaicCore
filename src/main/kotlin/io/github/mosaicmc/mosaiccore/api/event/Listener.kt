@@ -52,9 +52,7 @@ interface Listener {
 inline fun <reified E : Event> Listener.subscriber(
     data: SubscriberData = SubscriberData(),
     noinline function: SubscriberFunction<E>
-) {
-    subscriber(E::class, data, function)
-}
+) = subscriber(E::class, data, function)
 
 /**
  * Subscriber
@@ -70,9 +68,7 @@ inline fun <reified E : Event> Listener.subscriber(
     priority: Priority = Priority.NORMAL,
     cancellable: Boolean = false,
     noinline function: SubscriberFunction<E>
-) {
-    subscriber<E>(SubscriberData(priority, cancellable), function)
-}
+) = subscriber<E>(SubscriberData(priority, cancellable), function)
 
 /**
  * Listener

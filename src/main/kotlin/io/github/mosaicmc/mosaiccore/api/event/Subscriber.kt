@@ -42,9 +42,7 @@ data class Priority(private val integer: Int) : Comparable<Priority> {
         val LOWEST = Priority(Int.MIN_VALUE)
     }
 
-    override fun compareTo(other: Priority): Int {
-        return other.integer.compareTo(integer)
-    }
+    override fun compareTo(other: Priority): Int = other.integer.compareTo(integer)
 }
 
 typealias SubscriberFunction<E> = E.() -> Unit

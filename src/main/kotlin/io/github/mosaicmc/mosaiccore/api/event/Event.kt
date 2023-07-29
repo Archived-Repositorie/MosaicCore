@@ -29,10 +29,10 @@ interface Event
 fun <E : Event> E.call() {
     val handler = EventHandler.getOrCreateHandler(this::class)
     handler.iterator().forEach {
-        if ((this is CancellableEvent) && this.cancelled && !it.data.cancellable) {
+        if ((this is CancellableEvent) && cancelled && !it.data.cancellable) {
             return@forEach
         }
-        this.apply(it.function)
+        apply(it.function)
         logger.debug("Handled event ${this::class.simpleName} by ${it.plugin.name}")
     }
 }
