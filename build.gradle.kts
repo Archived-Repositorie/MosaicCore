@@ -103,6 +103,7 @@ tasks {
 
 java {
     withSourcesJar()
+    withJavadocJar()
 }
 
 
