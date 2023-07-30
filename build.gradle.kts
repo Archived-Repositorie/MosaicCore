@@ -113,7 +113,7 @@ publishing {
     repositories {
         maven {
             name = "GitHubPackages"
-            url = uri("https://github.com/MosaicMC/MosaicCore")
+            url = uri("https://maven.pkg.github.com/MosaicMC/MosaicCore")
             credentials {
                 username = System.getenv("GITHUB_ACTOR")
                 password = System.getenv("GITHUB_TOKEN")
