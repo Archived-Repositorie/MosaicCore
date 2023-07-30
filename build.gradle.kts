@@ -113,6 +113,9 @@ publishing {
     publications {
         register<MavenPublication>("gpr") {
             from(components["kotlin"])
+            artifactId = project.properties["mod_id"].toString()
+            groupId = project.properties["maven_group"].toString()
+            version = project.properties["mod_version"].toString()
         }
     }
     repositories {
