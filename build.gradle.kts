@@ -108,3 +108,22 @@ java {
 ktfmt {
     kotlinLangStyle()
 }
+
+publishing {
+    repositories {
+        maven {
+            name = "GitHubPackages"
+            url = uri("https://github.com/MosaicMC/MosaicCore")
+            credentials {
+                username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
+                password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
+            }
+        }
+    }
+    publications {
+        register<MavenPublication>("gpr") {
+            from(components["kotlin"])
+        }
+    }
+}
+
