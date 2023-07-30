@@ -110,6 +110,11 @@ ktfmt {
 }
 
 publishing {
+    publications {
+        register<MavenPublication>("gpr") {
+            from(components["kotlin"])
+        }
+    }
     repositories {
         maven {
             name = "GitHubPackages"
