@@ -105,6 +105,7 @@ java {
     withSourcesJar()
 }
 
+
 ktfmt {
     kotlinLangStyle()
 }
@@ -112,7 +113,7 @@ ktfmt {
 publishing {
     publications {
         register<MavenPublication>("gpr") {
-            from(components["kotlin"])
+            from(components["java"])
             artifactId = project.properties["mod_id"].toString()
             groupId = project.properties["maven_group"].toString()
             version = project.properties["mod_version"].toString()
