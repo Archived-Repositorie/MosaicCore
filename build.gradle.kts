@@ -14,7 +14,7 @@ loom {
     serverOnlyMinecraftJar()
 }
 vineflower {
-    brand.set(DecompilerBrand.VINEFLOWER)
+    brand = DecompilerBrand.VINEFLOWER
 }
 
 val sourceCompatibility = JavaVersion.VERSION_17
@@ -32,10 +32,14 @@ repositories {
 dependencies {
     minecraft("com.mojang:minecraft:${project.properties["minecraft_version"]}")
     @Suppress("UnstableApiUsage")
-    mappings(loom.layered {
-        officialMojangMappings()
-        parchment("org.parchmentmc.data:parchment-${project.properties["minecraft_version"]}:${project.properties["parchment_mappings"]}@zip")
-    })
+    mappings(
+        loom.layered {
+            officialMojangMappings()
+            parchment(
+                "org.parchmentmc.data:parchment-${project.properties["minecraft_version"]}:${project.properties["parchment_mappings"]}@zip"
+            )
+        }
+    )
 
     modImplementation("net.fabricmc:fabric-loader:${project.properties["loader_version"]}")
     modImplementation("net.fabricmc:fabric-language-kotlin:${project.properties["fabric_kotlin_version"]}+kotlin.${project.properties["kotlin_version"]}")
@@ -90,6 +94,10 @@ tasks {
         dependsOn(dokkaJavadoc)
         from(dokkaHtml.flatMap { it.outputDirectory })
         archiveClassifier = "javadoc"
+    }
+
+    publishToMavenLocal {
+        group = project.properties["maven_group"].toString()
     }
 }
 
