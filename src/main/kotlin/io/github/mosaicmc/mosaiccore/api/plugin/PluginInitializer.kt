@@ -15,13 +15,20 @@
  */
 package io.github.mosaicmc.mosaiccore.api.plugin
 
-/** Interface for plugins to implement initialization code when loaded by the server. */
+/**
+ * PluginInitializer interface
+ *
+ * This interface should be implemented by plugins to perform initialization code when loaded by the
+ * server. Plugins can provide their custom initialization logic by implementing the `onLoad`
+ * method.
+ */
 fun interface PluginInitializer {
 
     /**
      * Called when the plugin is loaded by the server.
      *
-     * @param plugin the container of the plugin
+     * @param plugin The container of the plugin containing information about the mod and the server
+     *   instance.
      */
     fun onLoad(plugin: PluginContainer)
 }

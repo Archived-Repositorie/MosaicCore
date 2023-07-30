@@ -20,6 +20,9 @@ package io.github.mosaicmc.mosaiccore.api.event
 /**
  * Data class for subscriber
  *
+ * Represents additional data associated with a subscriber, including its priority and cancellable
+ * status.
+ *
  * @property priority The priority of the subscriber, defaults to [Priority.NORMAL].
  * @property cancellable Determines whether canceled events should be ignored, defaults to false.
  */
@@ -31,7 +34,10 @@ data class SubscriberData(
 /**
  * Priority of a subscriber
  *
- * @property integer The integer value of the priority
+ * Represents the priority level of a subscriber. Subscribers with higher priority values are
+ * executed first.
+ *
+ * @property integer The integer value representing the priority level.
  */
 data class Priority(private val integer: Int) : Comparable<Priority> {
     companion object {
@@ -42,9 +48,22 @@ data class Priority(private val integer: Int) : Comparable<Priority> {
         val LOWEST = Priority(Int.MIN_VALUE)
     }
 
-    override fun compareTo(other: Priority): Int {
-        return other.integer.compareTo(integer)
-    }
+    /**
+     * Compare this priority to another priority.
+     *
+     * @param other The other priority to compare to.
+     * @return A positive integer if this priority is greater, zero if they are equal, and a
+     *   negative integer if this priority is smaller.
+     */
+    override fun compareTo(other: Priority): Int = other.integer.compareTo(integer)
 }
 
+/**
+ * Type alias for a SubscriberFunction
+ *
+ * A `SubscriberFunction` is a lambda expression that represents a subscriber's action or callback
+ * when handling an event of type [E].
+ *
+ * @param E The type of event that the subscriber function can handle.
+ */
 typealias SubscriberFunction<E> = E.() -> Unit

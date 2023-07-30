@@ -25,10 +25,13 @@ import org.slf4j.Logger
 import org.slf4j.LoggerFactory
 
 /**
- * Plugin represents a plugin.
+ * PluginContainer data class
  *
- * @property modContainer Represents the mod of the plugin
- * @property server The server.
+ * Represents a container for a plugin, containing information such as the mod container and the
+ * Minecraft server instance.
+ *
+ * @property modContainer Represents the mod container of the plugin.
+ * @property server The Minecraft server instance associated with the plugin.
  */
 data class PluginContainer(
     val modContainer: ModContainer,
@@ -36,33 +39,41 @@ data class PluginContainer(
 )
 
 /**
- * Gets the resource location.
+ * Extension function `resource`
+ *
+ * Gets the resource location for the plugin by combining the plugin's name and the specified path.
  *
  * @param path The path to the resource.
- * @return The resource location.
+ * @return The resource location as a `ResourceLocation` object.
  */
 infix fun PluginContainer.resource(path: String): ResourceLocation = ResourceLocation(name, path)
 
 /**
- * Gets the metadata of the plugin.
+ * Extension property `metadata`
  *
- * @return The metadata of the plugin
+ * Gets the metadata of the plugin from the `modContainer` property.
+ *
+ * @return The metadata of the plugin as a `ModMetadata` object.
  */
 val PluginContainer.metadata: ModMetadata
     get() = this.modContainer.metadata
 
 /**
- * Gets the (logger) of the plugin
+ * Extension property `logger`
  *
- * @return The logger
+ * Gets the logger associated with the plugin using the plugin's name.
+ *
+ * @return The logger as an `Logger` object.
  */
 val PluginContainer.logger: Logger
     get() = LoggerFactory.getLogger(name)
 
 /**
- * Gets the name of the plugin.
+ * Extension property `name`
  *
- * @return The name of the plugin
+ * Gets the name of the plugin from the `metadata` property.
+ *
+ * @return The name of the plugin as a `String`.
  */
 val PluginContainer.name: String
     get() = metadata.id

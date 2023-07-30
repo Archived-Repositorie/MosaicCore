@@ -18,33 +18,46 @@ package io.github.mosaicmc.mosaiccore.internal.event
 
 import io.github.mosaicmc.mosaiccore.api.event.*
 import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
+import io.github.mosaicmc.mosaiccore.internal.unit
 import kotlin.reflect.KClass
 
 internal typealias MutList = MutableList<Subscriber<out Event>>
 
 /**
- * Listener builder
+ * Listener builder class
  *
- * Listener builder is a class that holds all subscribers and registers them to the event handler
+ * The `ListenerImpl` class is responsible for holding all subscribers and registering them to the
+ * event handler.
  *
- * @property plugin The plugin container
+ * @property plugin The plugin container associated with the listener.
  */
 class ListenerImpl(private val plugin: PluginContainer) : Listener {
     private val subs: MutList = mutableListOf()
-    /**
-     * Register
-     *
-     * Register is a function that registers all subscribers to the event handler.
-     */
-    internal fun register() {
-        EventHandler.registerAll(subs)
-    }
 
+    /**
+     * Register function
+     *
+     * The `register` function registers all subscribers to the event handler. It calls the
+     * `EventHandler.registerAll` method to add all subscribers to the event handler for their
+     * corresponding event types.
+     */
+    internal fun register() = EventHandler.registerAll(subs)
+
+    /**
+     * Subscriber function
+     *
+     * The `subscriber` function adds a subscriber to this listener for a specific event type [E].
+     * It creates a `Subscriber` object and adds it to the list of subscribers (`subs`).
+     *
+     * @param E The event class that the subscriber will listen to.
+     * @param eventClazz The event class representing the type of event that the subscriber listens
+     *   to.
+     * @param data The subscriber data, including priority and cancellable settings (optional).
+     * @param function The subscriber function, a lambda expression to handle the event.
+     */
     override fun <E : Event> subscriber(
         eventClazz: KClass<E>,
         data: SubscriberData,
         function: SubscriberFunction<E>
-    ) {
-        subs.add(Subscriber(eventClazz, data, function, plugin))
-    }
+    ) = subs.add(Subscriber(eventClazz, data, function, plugin)).unit
 }

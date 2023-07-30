@@ -1,5 +1,4 @@
 import juuxel.vineflowerforloom.api.DecompilerBrand
-import net.fabricmc.loom.configuration.providers.minecraft.MinecraftJarConfiguration
 import org.jetbrains.kotlin.gradle.tasks.KotlinCompile
 
 plugins {
@@ -8,6 +7,7 @@ plugins {
     id("org.jetbrains.kotlin.jvm")
     id("com.ncorti.ktfmt.gradle") version "0.12.0"
     id("io.github.juuxel.loom-vineflower") version "1.11.0"
+    id("org.jetbrains.dokka") version "1.8.20"
 }
 
 loom {
@@ -15,9 +15,6 @@ loom {
 }
 vineflower {
     brand.set(DecompilerBrand.VINEFLOWER)
-    preferences {
-
-    }
 }
 
 val sourceCompatibility = JavaVersion.VERSION_17
@@ -54,6 +51,15 @@ tasks {
         expand(project.properties)
     }
 
+    getByName("build") {
+        dependsOn("dokkaHtmlJar")
+        dependsOn("dokkaJavadocJar")
+    }
+
+    getByName("javadoc") {
+        dependsOn("dokkaJavadocJar")
+    }
+
     jar {
         from("LICENSE") {
             rename { "${it}_${project.properties["archivesBaseName"]}"}
@@ -71,11 +77,20 @@ tasks {
 
     withType<KotlinCompile>().configureEach {
         kotlinOptions.jvmTarget = "17"
-        kotlinOptions.freeCompilerArgs = listOf(
-            "-Xlambdas=indy"
-        )
+        kotlinOptions.freeCompilerArgs += "-Xlambdas=indy"
     }
 
+    register<Jar>("dokkaHtmlJar") {
+        dependsOn(dokkaHtml)
+        from(dokkaHtml.flatMap { it.outputDirectory })
+        archiveClassifier = "html-docs"
+    }
+
+    register<Jar>("dokkaJavadocJar") {
+        dependsOn(dokkaJavadoc)
+        from(dokkaHtml.flatMap { it.outputDirectory })
+        archiveClassifier = "javadoc"
+    }
 }
 
 java {
@@ -85,5 +100,3 @@ java {
 ktfmt {
     kotlinLangStyle()
 }
-
-

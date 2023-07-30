@@ -20,19 +20,32 @@ package io.github.mosaicmc.mosaiccore.api.event
 import io.github.mosaicmc.mosaiccore.api.event.properties.CancellableEvent
 import io.github.mosaicmc.mosaiccore.api.plugin.name
 import io.github.mosaicmc.mosaiccore.internal.event.EventHandler
-import io.github.mosaicmc.mosaiccore.internal.event.EventHandler.getOrCreateHandler
 import io.github.mosaicmc.mosaiccore.internal.logger
 
-/** Event interface used for events. */
+/**
+ * Event interface
+ *
+ * The `Event` interface is used as a base interface for defining events. Events are objects that
+ * represent something that happened in the system and can be listened to by subscribers.
+ */
 interface Event
 
+/**
+ * Call function for events
+ *
+ * The `call` extension function allows triggering the event and handling it by executing the
+ * corresponding subscribers.
+ *
+ * @param E The event type. The type of event on which this function is called.
+ */
 fun <E : Event> E.call() {
     val handler = EventHandler.getOrCreateHandler(this::class)
+
     handler.iterator().forEach {
-        if ((this is CancellableEvent) && this.cancelled && !it.data.cancellable) {
+        if ((this is CancellableEvent) && cancelled && !it.data.cancellable) {
             return@forEach
         }
-        this.apply(it.function)
+        apply(it.function)
         logger.debug("Handled event ${this::class.simpleName} by ${it.plugin.name}")
     }
 }

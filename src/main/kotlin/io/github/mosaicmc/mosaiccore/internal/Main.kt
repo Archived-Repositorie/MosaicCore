@@ -22,6 +22,9 @@ import org.slf4j.LoggerFactory
 
 internal val logger = LoggerFactory.getLogger("mosaicmc")
 
+internal val Any?.unit
+    get() = Unit
+
 fun preInit() {
     logger.info("Welcome to mosaiccore!")
 }
