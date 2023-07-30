@@ -115,14 +115,9 @@ publishing {
             name = "GitHubPackages"
             url = uri("https://github.com/MosaicMC/MosaicCore")
             credentials {
-                username = project.findProperty("gpr.user") as String? ?: System.getenv("USERNAME")
-                password = project.findProperty("gpr.key") as String? ?: System.getenv("TOKEN")
+                username = System.getenv("GITHUB_ACTOR")
+                password = System.getenv("GITHUB_TOKEN")
             }
-        }
-    }
-    publications {
-        register<MavenPublication>("gpr") {
-            from(components["kotlin"])
         }
     }
 }
