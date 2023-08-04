@@ -17,11 +17,13 @@
 package io.github.mosaicmc.mosaiccore.internal.event
 
 import io.github.mosaicmc.mosaiccore.api.event.*
+import io.github.mosaicmc.mosaiccore.api.event.subscriber.SubscriberData
+import io.github.mosaicmc.mosaiccore.api.event.subscriber.SubscriberFunction
 import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
 import io.github.mosaicmc.mosaiccore.internal.unit
 import kotlin.reflect.KClass
 
-internal typealias MutList = MutableList<Subscriber<out Event>>
+internal typealias MutList = MutableList<Subscriber<*>>
 
 /**
  * Listener builder class
@@ -55,9 +57,11 @@ class ListenerImpl(private val plugin: PluginContainer) : Listener {
      * @param data The subscriber data, including priority and cancellable settings (optional).
      * @param function The subscriber function, a lambda expression to handle the event.
      */
-    override fun <E : Event> subscriber(
+    override fun <E : Event<E>> subscriber(
         eventClazz: KClass<E>,
         data: SubscriberData,
-        function: SubscriberFunction<E>
-    ) = subs.add(Subscriber(eventClazz, data, function, plugin)).unit
+        function: SubscriberFunction<Event<E>>
+    ) {
+        subs.add(Subscriber(eventClazz, data, function, plugin)).unit
+    }
 }

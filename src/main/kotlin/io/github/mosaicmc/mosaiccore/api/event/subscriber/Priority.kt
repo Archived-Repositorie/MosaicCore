@@ -15,21 +15,7 @@
  */
 @file:Suppress("unused")
 
-package io.github.mosaicmc.mosaiccore.api.event
-
-/**
- * Data class for subscriber
- *
- * Represents additional data associated with a subscriber, including its priority and cancellable
- * status.
- *
- * @property priority The priority of the subscriber, defaults to [Priority.NORMAL].
- * @property cancellable Determines whether canceled events should be ignored, defaults to false.
- */
-data class SubscriberData(
-    val priority: Priority = Priority.NORMAL,
-    val cancellable: Boolean = false
-)
+package io.github.mosaicmc.mosaiccore.api.event.subscriber
 
 /**
  * Priority of a subscriber
@@ -57,13 +43,3 @@ data class Priority(private val integer: Int) : Comparable<Priority> {
      */
     override fun compareTo(other: Priority): Int = other.integer.compareTo(integer)
 }
-
-/**
- * Type alias for a SubscriberFunction
- *
- * A `SubscriberFunction` is a lambda expression that represents a subscriber's action or callback
- * when handling an event of type [E].
- *
- * @param E The type of event that the subscriber function can handle.
- */
-typealias SubscriberFunction<E> = E.() -> Unit

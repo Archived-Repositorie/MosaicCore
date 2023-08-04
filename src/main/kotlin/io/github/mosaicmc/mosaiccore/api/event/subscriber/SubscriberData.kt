@@ -13,23 +13,18 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-@file:Suppress("unused")
-
-package io.github.mosaicmc.mosaiccore.api.plugin
-
-import net.fabricmc.loader.api.ModContainer
-import net.minecraft.server.MinecraftServer
+package io.github.mosaicmc.mosaiccore.api.event.subscriber
 
 /**
- * PluginContainer data class
+ * Data class for subscriber
  *
- * Represents a container for a plugin, containing information such as the mod container and the
- * Minecraft server instance.
+ * Represents additional data associated with a subscriber, including its priority and cancellable
+ * status.
  *
- * @property modContainer Represents the mod container of the plugin.
- * @property server The Minecraft server instance associated with the plugin.
+ * @property priority The priority of the subscriber, defaults to [Priority.NORMAL].
+ * @property cancellable Determines whether canceled events should be ignored, defaults to false.
  */
-data class PluginContainer(
-    val modContainer: ModContainer,
-    val server: MinecraftServer,
+data class SubscriberData(
+    val priority: Priority = Priority.NORMAL,
+    val cancellable: Boolean = false
 )

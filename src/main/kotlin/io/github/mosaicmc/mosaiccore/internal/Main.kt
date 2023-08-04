@@ -15,6 +15,7 @@
  */
 
 @file:Suppress("unused")
+@file:JvmName("Main")
 
 package io.github.mosaicmc.mosaiccore.internal
 

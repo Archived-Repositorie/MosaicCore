@@ -13,23 +13,25 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
-@file:Suppress("unused")
+@file:JvmName("EventRegistry")
 
-package io.github.mosaicmc.mosaiccore.api.plugin
+package io.github.mosaicmc.mosaiccore.internal.event
 
-import net.fabricmc.loader.api.ModContainer
-import net.minecraft.server.MinecraftServer
+import io.github.mosaicmc.mosaiccore.api.event.Event
 
 /**
- * PluginContainer data class
+ * Register All
  *
- * Represents a container for a plugin, containing information such as the mod container and the
- * Minecraft server instance.
+ * Register all subscribers for their corresponding event types.
  *
- * @property modContainer Represents the mod container of the plugin.
- * @property server The Minecraft server instance associated with the plugin.
+ * @param subs The list of subscriber objects to register.
  */
-data class PluginContainer(
-    val modContainer: ModContainer,
-    val server: MinecraftServer,
-)
+internal fun EventHandler.registerAll(subs: List<Subscriber<*>>) = subs.forEach { register(it) }
+
+/**
+ * Register a subscriber for its corresponding event type.
+ *
+ * @param sub The subscriber object to register.
+ */
+private fun <E : Event<E>> EventHandler.register(sub: Subscriber<E>) =
+    getOrCreateHandler(sub.eventClass).add(sub)

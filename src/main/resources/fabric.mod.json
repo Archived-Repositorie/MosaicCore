@@ -19,7 +19,7 @@
     "preLaunch": [
       {
         "adapter": "kotlin",
-        "value": "io.github.mosaicmc.mosaiccore.internal.MainKt::preInit"
+        "value": "io.github.mosaicmc.mosaiccore.internal.Main::preInit"
       }
     ]
   },
