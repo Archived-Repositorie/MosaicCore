@@ -28,14 +28,12 @@ import io.github.mosaicmc.mosaiccore.internal.event.Handler
  * represent something that happened in the system and can be listened to by subscribers.
  */
 interface Event<E : Event<E>> {
-    fun call(handler: Handler<E>) {
-        handler.iterator().forEach {
-            if ((this is CancellableEvent) && cancelled && !it.data.cancellable) {
-                return@forEach
-            }
+    fun call(handler: Handler<E>) =
+        handler.asStream().forEach {
+            if ((this is CancellableEvent) && cancelled && !it.data.cancellable) return@forEach
+
             apply(it.function)
         }
-    }
 }
 
 /**
@@ -46,8 +44,4 @@ interface Event<E : Event<E>> {
  *
  * @param E The event type. The type of event on which this function is called.
  */
-fun <E : Event<E>> E.call() {
-    val handler = EventHandler.getOrCreateHandler(this::class)
-
-    call(handler)
-}
+fun <E : Event<E>> E.call() = call(EventHandler.getOrCreateHandler(this::class))

@@ -13,10 +13,13 @@
  * You should have received a copy of the GNU Lesser General Public License
  * along with this program.  If not, see <https://www.gnu.org/licenses/>.
  */
+@file:Suppress("unused")
+
 package io.github.mosaicmc.mosaiccore.internal.event
 
 import io.github.mosaicmc.mosaiccore.api.event.Event
 import java.util.concurrent.ConcurrentSkipListSet
+import java.util.stream.Stream
 
 /**
  * Handler class
@@ -36,11 +39,18 @@ class Handler<E : Event<E>> {
     fun add(value: Subscriber<E>) = values.add(value)
 
     /**
-     * Get an iterator to traverse through the subscribers.
+     * Get an immutable list of the subscribers.
      *
-     * @return An iterator over the subscribers in this handler.
+     * @return Immutable list of the subscribers in this handler.
      */
-    fun iterator(): Iterator<Subscriber<E>> = values.iterator()
+    fun asList(): List<Subscriber<E>> = values.toList()
+
+    /**
+     * Get a stream of the subscribers
+     *
+     * @return Stream of the subscribers in this handler.
+     */
+    fun asStream(): Stream<Subscriber<E>> = values.stream()
 
     /**
      * Convert the handler to a human-readable string representation.
