@@ -30,7 +30,7 @@ import kotlin.reflect.KClass
  * subscribers.
  */
 object EventHandler {
-    private val events: TypeMap<Event, Handler<out Event>> = TypeMap()
+    private val events: TypeMap<Event<*>, Handler<*>> = TypeMap()
 
     /**
      * Get or create the event handler for a specific event type.
@@ -41,27 +41,9 @@ object EventHandler {
      * @param eventKClass The Kotlin class representing the event type.
      * @return The event handler for the specified event type.
      */
-    internal fun <E : Event> getOrCreateHandler(eventKClass: KClass<out E>): Handler<E> =
-        events.getOrDefault(eventKClass, Handler<E>().also { events[eventKClass] = it })
-            as Handler<E>
+    internal fun <E : Event<E>> getOrCreateHandler(eventKClass: KClass<out E>): Handler<E> =
+        events.getOrPut(eventKClass) { Handler() } as Handler<E>
 }
-
-/**
- * Register All
- *
- * Register all subscribers for their corresponding event types.
- *
- * @param subs The list of subscriber objects to register.
- */
-internal fun EventHandler.registerAll(subs: List<Subscriber<*>>) = subs.forEach { register(it) }
-
-/**
- * Register a subscriber for its corresponding event type.
- *
- * @param sub The subscriber object to register.
- */
-private fun <E : Event> EventHandler.register(sub: Subscriber<E>) =
-    getOrCreateHandler(sub.eventClass).add(sub)
 
 /**
  * TypeMap typealias
