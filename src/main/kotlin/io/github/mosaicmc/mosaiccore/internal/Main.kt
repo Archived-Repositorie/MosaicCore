@@ -19,12 +19,6 @@
 
 package io.github.mosaicmc.mosaiccore.internal
 
-import io.github.mosaicmc.mosaiccore.api.event.Event
-import io.github.mosaicmc.mosaiccore.api.event.call
-import io.github.mosaicmc.mosaiccore.api.event.listen
-import io.github.mosaicmc.mosaiccore.api.event.subscriber
-import io.github.mosaicmc.mosaiccore.api.plugin.PluginContainer
-import io.github.mosaicmc.mosaiccore.internal.event.Handler
 import org.slf4j.LoggerFactory
 
 internal val logger = LoggerFactory.getLogger("mosaicmc")
@@ -34,15 +28,4 @@ internal val Any?.unit
 
 fun preInit() {
     logger.info("Welcome to mosaiccore!")
-}
-
-fun test(plugin: PluginContainer) {
-    plugin listen { subscriber<TestEvent> { logger.info("Test") } }
-    TestEvent().call()
-}
-
-class TestEvent : Event<TestEvent> {
-    override fun call(handler: Handler<TestEvent>) {
-        handler.iterator().forEach { apply(it.function) }
-    }
 }
